@@ -94,7 +94,9 @@ npm run test:watch        # Vitest in watch mode
 ```bash
 npx prisma migrate dev    # apply schema changes to local DB
 npx prisma db seed        # seed IGCSE subjects (Math, Physics, Chemistry, etc.)
-npx tsx prisma/demo.ts    # seed 24 demo Biology flashcards (8 easy, 8 medium, 8 hard)
+npx tsx prisma/demo.ts          # seed 24 demo Biology flashcards (quick start)
+npx tsx prisma/seed-biology.ts  # seed 145 Biology flashcards from past papers (2015–2025)
+npx tsx prisma/seed-biology.ts --force  # wipe and re-seed Biology flashcards
 npx prisma studio         # open Prisma Studio at http://localhost:5555
 npx prisma generate       # regenerate Prisma client after schema changes
 ```
