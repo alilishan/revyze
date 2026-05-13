@@ -33,6 +33,15 @@ export default async function QuizPage({
                   answer: true,
                   explanation: true,
                   difficulty: true,
+                  frequency: true,
+                  sources: {
+                    select: {
+                      paper: true,
+                      year: true,
+                      session: true,
+                      questionNumber: true,
+                    },
+                  },
                 },
               },
             },
