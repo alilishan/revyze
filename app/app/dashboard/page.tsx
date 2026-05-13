@@ -1,6 +1,6 @@
 import { auth } from "@/auth"
 import { getDashboardData } from "@/lib/dashboard"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import type { Metadata } from "next"
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 }
 
 type DashboardData = Awaited<ReturnType<typeof getDashboardData>>
-type Quiz = DashboardData["availableQuizzes"][number]
+type UserQuiz = DashboardData["userQuizzes"][number]
 type Attempt = DashboardData["recentAttempts"][number]
 type Subject = DashboardData["subjects"][number]
 
@@ -25,11 +25,20 @@ const SUBJECT_EMOJI: Record<string, string> = {
   "0460": "🌍",
 }
 
+const scoreColor = (pct: number) =>
+  pct >= 80
+    ? "text-emerald-600"
+    : pct >= 60
+      ? "text-blue-600"
+      : pct >= 40
+        ? "text-amber-500"
+        : "text-red-500"
+
 export default async function DashboardPage() {
   const session = await auth()
   if (!session?.user?.id) return null
 
-  const { recentAttempts, availableQuizzes, subjects, stats } =
+  const { userQuizzes, recentAttempts, subjects, stats } =
     await getDashboardData(session.user.id)
 
   const firstName = session.user.name?.split(" ")[0] ?? "there"
@@ -71,21 +80,29 @@ export default async function DashboardPage() {
 
       {/* ── Main grid ────────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Available quizzes — takes 2/3 width on large screens */}
+        {/* Your Quizzes — takes 2/3 width on large screens */}
         <section className="lg:col-span-2 space-y-4">
-          <SectionHeader title="Available Quizzes" />
-          {availableQuizzes.length === 0 ? (
-            <EmptyState message="No quizzes yet — check back soon!" />
+          <div className="flex items-center justify-between">
+            <SectionHeader title="Your Quizzes" />
+            <Link
+              href="/dashboard/quiz/start"
+              className="text-xs text-slate-400 hover:text-slate-600"
+            >
+              + New quiz
+            </Link>
+          </div>
+          {userQuizzes.length === 0 ? (
+            <EmptyState message="No quizzes yet — hit 'Start Quiz' to begin!" />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {availableQuizzes.map((quiz) => (
-                <QuizCard key={quiz.id} quiz={quiz} />
+              {userQuizzes.map((attempt) => (
+                <UserQuizCard key={attempt.id} attempt={attempt} />
               ))}
             </div>
           )}
         </section>
 
-        {/* Recent activity — takes 1/3 width on large screens */}
+        {/* Recent Activity — takes 1/3 width on large screens */}
         <section className="space-y-4">
           <SectionHeader title="Recent Activity" />
           {recentAttempts.length === 0 ? (
@@ -128,27 +145,38 @@ function StatCard({ value, label }: { value: string; label: string }) {
   )
 }
 
-function QuizCard({ quiz }: { quiz: Quiz }) {
+function UserQuizCard({ attempt }: { attempt: UserQuiz }) {
+  const color = scoreColor(attempt.score)
+  const date = attempt.completedAt
+    ? new Date(attempt.completedAt).toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+      })
+    : ""
+
   return (
     <div className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col gap-3">
       <div>
         <p className="text-xs font-medium text-slate-400 uppercase tracking-wide">
-          {quiz.subject.name}
+          {attempt.quiz.subject.name}
         </p>
-        <p className="font-semibold text-slate-900 mt-0.5 line-clamp-2 text-sm">
-          {quiz.title}
+        <p className="font-semibold text-slate-900 mt-0.5 line-clamp-1 text-sm">
+          {attempt.quiz.title}
         </p>
       </div>
-      <div className="flex items-center justify-between mt-auto">
-        <span className="text-xs text-slate-400">
-          {quiz._count.quizFlashcards}{" "}
-          {quiz._count.quizFlashcards === 1 ? "question" : "questions"}
-        </span>
+
+      <div className="flex items-end justify-between mt-auto">
+        <div>
+          <p className={`text-2xl font-black ${color}`}>{attempt.score}%</p>
+          <p className="text-xs text-slate-400 mt-0.5">
+            {attempt.correctAnswers}/{attempt.totalQuestions} correct &middot; {date}
+          </p>
+        </div>
         <Link
-          href="/dashboard/quiz/start"
-          className={cn(buttonVariants({ size: "sm" }))}
+          href={`/dashboard/quiz/start?subjectId=${attempt.quiz.subject.id}`}
+          className={cn(buttonVariants({ size: "sm", variant: "outline" }))}
         >
-          Start
+          Retake
         </Link>
       </div>
     </div>
@@ -156,17 +184,7 @@ function QuizCard({ quiz }: { quiz: Quiz }) {
 }
 
 function AttemptCard({ attempt }: { attempt: Attempt }) {
-  const pct =
-    attempt.totalQuestions > 0
-      ? Math.round((attempt.correctAnswers / attempt.totalQuestions) * 100)
-      : attempt.score
-
-  const scoreColor =
-    pct >= 70
-      ? "text-emerald-600"
-      : pct >= 50
-        ? "text-amber-500"
-        : "text-red-500"
+  const color = scoreColor(attempt.score)
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 p-3">
@@ -175,7 +193,7 @@ function AttemptCard({ attempt }: { attempt: Attempt }) {
         {attempt.quiz.title}
       </p>
       <div className="flex items-center justify-between mt-2">
-        <span className={`text-lg font-bold ${scoreColor}`}>{pct}%</span>
+        <span className={`text-lg font-bold ${color}`}>{attempt.score}%</span>
         <span className="text-xs text-slate-400">
           {attempt.completedAt
             ? new Date(attempt.completedAt).toLocaleDateString("en-GB", {
@@ -203,9 +221,7 @@ function SubjectCard({ subject }: { subject: Subject }) {
         {subject.name}
       </p>
       <p className="text-xs text-slate-400 mt-1">
-        {subject._count.flashcards > 0
-          ? `${subject._count.flashcards} cards`
-          : "No cards yet"}
+        {hasCards ? `${subject._count.flashcards} cards` : "No cards yet"}
       </p>
     </Link>
   )

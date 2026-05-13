@@ -1,7 +1,23 @@
 import { prisma } from "@/lib/prisma"
 
 export async function getDashboardData(userId: string) {
-  const [recentAttempts, availableQuizzes, subjects, stats] = await Promise.all([
+  const [userQuizzes, recentAttempts, subjects, stats] = await Promise.all([
+    // Full attempt cards with score + retake link (main section)
+    prisma.quizAttempt.findMany({
+      where: { userId, completedAt: { not: null } },
+      orderBy: { completedAt: "desc" },
+      take: 6,
+      include: {
+        quiz: {
+          select: {
+            title: true,
+            subject: { select: { id: true, name: true } },
+            _count: { select: { quizFlashcards: true } },
+          },
+        },
+      },
+    }),
+    // Compact timeline (sidebar)
     prisma.quizAttempt.findMany({
       where: { userId, completedAt: { not: null } },
       orderBy: { completedAt: "desc" },
@@ -13,14 +29,6 @@ export async function getDashboardData(userId: string) {
             subject: { select: { name: true } },
           },
         },
-      },
-    }),
-    prisma.quiz.findMany({
-      take: 6,
-      orderBy: { createdAt: "desc" },
-      include: {
-        subject: { select: { name: true } },
-        _count: { select: { quizFlashcards: true } },
       },
     }),
     prisma.subject.findMany({
@@ -36,5 +44,5 @@ export async function getDashboardData(userId: string) {
     }),
   ])
 
-  return { recentAttempts, availableQuizzes, subjects, stats }
+  return { userQuizzes, recentAttempts, subjects, stats }
 }

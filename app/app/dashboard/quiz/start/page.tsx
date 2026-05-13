@@ -18,7 +18,12 @@ const DIFFICULTIES = [
 
 const CARD_COUNTS = [5, 10, 15, 20] as const
 
-export default async function StartQuizPage() {
+export default async function StartQuizPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ subjectId?: string }>
+}) {
+  const { subjectId: preselectedSubjectId } = await searchParams
   const subjects = await prisma.subject.findMany({
     orderBy: { name: "asc" },
     include: { _count: { select: { flashcards: true } } },
@@ -66,7 +71,11 @@ export default async function StartQuizPage() {
                     type="radio"
                     name="subjectId"
                     value={subject.id}
-                    defaultChecked={i === 0}
+                    defaultChecked={
+                      preselectedSubjectId
+                        ? subject.id === preselectedSubjectId
+                        : i === 0
+                    }
                     className="sr-only peer"
                   />
                   <div

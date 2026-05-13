@@ -43,10 +43,12 @@ export default async function QuizPage({
   })
 
   if (!attempt) redirect("/dashboard")
-  // Already completed — send back rather than re-showing the quiz
   if (attempt.completedAt) redirect("/dashboard")
 
   const flashcards = attempt.quiz.quizFlashcards.map((qf) => qf.flashcard)
+
+  // Flashcards were deleted under this attempt (e.g. re-seed with --force)
+  if (flashcards.length === 0) redirect("/dashboard/quiz/start")
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-8">
