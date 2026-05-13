@@ -106,6 +106,7 @@ model Flashcard {
   answer      String     @db.Text
   explanation String?    @db.Text
   difficulty  Difficulty @default(MEDIUM)
+  frequency   Int        @default(0)
   subjectId   String
   topicId     String?
   createdAt   DateTime   @default(now())
@@ -115,6 +116,21 @@ model Flashcard {
   topic          Topic?              @relation(fields: [topicId], references: [id], onDelete: SetNull)
   quizFlashcards QuizFlashcard[]
   attemptAnswers QuizAttemptAnswer[]
+  sources        FlashcardSource[]
+}
+
+model FlashcardSource {
+  id             String @id @default(cuid())
+  flashcardId    String
+  paper          String
+  year           String
+  session        String
+  questionNumber String
+
+  flashcard Flashcard @relation(fields: [flashcardId], references: [id], onDelete: Cascade)
+
+  @@index([flashcardId])
+  @@index([year])
 }
 
 model Quiz {
