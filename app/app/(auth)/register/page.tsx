@@ -1,22 +1,37 @@
-import { handleSignIn } from "@/actions/auth"
+import { handleRegister } from "@/actions/auth"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import type { Metadata } from "next"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Sign In — IGCSE FlashCards",
+  title: "Create Account — IGCSE FlashCards",
 }
 
-export default function LoginPage() {
+export default function RegisterPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-slate-50">
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 w-full max-w-sm">
-        <h1 className="text-2xl font-bold text-slate-900 mb-1">Sign in</h1>
+        <h1 className="text-2xl font-bold text-slate-900 mb-1">Create account</h1>
         <p className="text-slate-500 text-sm mb-6">
-          Enter your email and we&apos;ll send you a magic link.
+          Enter your details and we&apos;ll send you a magic link to get started.
         </p>
-        <form action={handleSignIn} className="space-y-4">
+        <form action={handleRegister} className="space-y-4">
+          <div className="space-y-1.5">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-slate-700"
+            >
+              Full name
+            </label>
+            <Input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Your name"
+              autoComplete="name"
+            />
+          </div>
           <div className="space-y-1.5">
             <label
               htmlFor="email"
@@ -38,9 +53,9 @@ export default function LoginPage() {
           </Button>
         </form>
         <p className="mt-4 text-center text-sm text-slate-500">
-          Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-slate-900 font-medium hover:underline">
-            Create one
+          Already have an account?{" "}
+          <Link href="/login" className="text-slate-900 font-medium hover:underline">
+            Sign in
           </Link>
         </p>
       </div>

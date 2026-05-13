@@ -50,10 +50,18 @@ export default async function HomePage() {
           quizzes, and detailed progress tracking.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
-          <Button size="lg">Start revising</Button>
-          <Button size="lg" variant="outline">
-            Browse subjects
-          </Button>
+          <Link
+            href={session?.user ? "/dashboard" : "/register"}
+            className={cn(buttonVariants({ size: "lg" }))}
+          >
+            {session?.user ? "Go to dashboard" : "Get started"}
+          </Link>
+          <Link
+            href="/login"
+            className={cn(buttonVariants({ size: "lg", variant: "outline" }))}
+          >
+            Sign in
+          </Link>
         </div>
       </section>
 

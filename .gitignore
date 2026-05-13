@@ -1,17 +1,46 @@
-# Dependencies
+# ── Dependencies ──────────────────────────────────────────────────────────────
 app/node_modules/
+node_modules/
 
-# Build output
+# ── Build output ──────────────────────────────────────────────────────────────
 app/.next/
 app/out/
+app/dist/
+app/.turbo/
 
-# Env files
+# ── Env files ─────────────────────────────────────────────────────────────────
 app/.env
 app/.env.local
 app/.env.*.local
+app/.env.production
+# keep the example template in source control
+!app/.env.example
 
-# Prisma generated
+# ── Prisma ────────────────────────────────────────────────────────────────────
 app/node_modules/.prisma/
+app/prisma/generated/
 
-# OS
+# ── Vercel ────────────────────────────────────────────────────────────────────
+.vercel/
+app/.vercel/
+
+# ── TypeScript ────────────────────────────────────────────────────────────────
+*.tsbuildinfo
+app/next-env.d.ts
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ── OS ────────────────────────────────────────────────────────────────────────
 .DS_Store
+Thumbs.db
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
