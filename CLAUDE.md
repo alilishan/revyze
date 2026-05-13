@@ -73,7 +73,6 @@ Seed scripts live in `app/prisma/seed-<subject>.ts`. Run them from `app/`:
 |---|---|
 | `npx tsx prisma/seed-biology.ts` | Seed 145 Biology flashcards (from `material/biology/flashcards.json`) |
 | `npx tsx prisma/seed-biology.ts --force` | Wipe and re-seed Biology flashcards |
-| `npx tsx prisma/demo.ts` | Seed 24 demo Biology flashcards (quick start, no PDFs needed) |
 
 Each `Flashcard` record stores `frequency` (how often the concept appeared in past papers) and a `FlashcardSource` join table with exact paper/year/session/question references.
 

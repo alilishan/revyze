@@ -51,10 +51,10 @@ export default async function StartQuizPage({
       {empty ? (
         <div className="bg-white rounded-2xl border border-dashed border-slate-200 p-10 text-center">
           <p className="text-slate-400 text-sm">
-            No flashcards available yet. Run the demo seed to get started.
+            No flashcards available yet. Seed a subject to get started.
           </p>
           <code className="mt-3 block text-xs bg-slate-100 text-slate-600 px-4 py-2 rounded-lg font-mono">
-            npx tsx prisma/demo.ts
+            npx tsx prisma/seed-biology.ts
           </code>
         </div>
       ) : (
