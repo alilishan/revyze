@@ -1,6 +1,8 @@
 import { auth } from "@/auth"
 import { getDashboardData } from "@/lib/dashboard"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import Link from "next/link"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -38,15 +40,23 @@ export default async function DashboardPage() {
   return (
     <main className="max-w-6xl mx-auto px-4 py-8 space-y-10">
       {/* ── Greeting ─────────────────────────────────────────────────── */}
-      <section>
-        <h1 className="text-3xl font-bold text-slate-900">
-          Hey {firstName}! 👋
-        </h1>
-        <p className="text-slate-500 mt-1 text-sm">
-          {totalAttempts === 0
-            ? "Ready to start revising? Pick a quiz below to kick things off."
-            : "Great to see you back. Keep the momentum going!"}
-        </p>
+      <section className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">
+            Hey {firstName}! 👋
+          </h1>
+          <p className="text-slate-500 mt-1 text-sm">
+            {totalAttempts === 0
+              ? "Ready to start revising? Pick a quiz below to kick things off."
+              : "Great to see you back. Keep the momentum going!"}
+          </p>
+        </div>
+        <Link
+          href="/dashboard/quiz/start"
+          className={cn(buttonVariants({ size: "sm" }), "shrink-0")}
+        >
+          Start Quiz →
+        </Link>
       </section>
 
       {/* ── Stats strip ──────────────────────────────────────────────── */}
@@ -134,7 +144,12 @@ function QuizCard({ quiz }: { quiz: Quiz }) {
           {quiz._count.quizFlashcards}{" "}
           {quiz._count.quizFlashcards === 1 ? "question" : "questions"}
         </span>
-        <Button size="sm">Start</Button>
+        <Link
+          href="/dashboard/quiz/start"
+          className={cn(buttonVariants({ size: "sm" }))}
+        >
+          Start
+        </Link>
       </div>
     </div>
   )
@@ -176,19 +191,23 @@ function AttemptCard({ attempt }: { attempt: Attempt }) {
 
 function SubjectCard({ subject }: { subject: Subject }) {
   const emoji = SUBJECT_EMOJI[subject.code] ?? "📚"
+  const hasCards = subject._count.flashcards > 0
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-4 hover:border-slate-300 transition-colors cursor-pointer">
+    <Link
+      href={hasCards ? "/dashboard/quiz/start" : "#"}
+      className="bg-white rounded-xl border border-slate-200 p-4 hover:border-slate-300 transition-colors block"
+    >
       <span className="text-2xl">{emoji}</span>
       <p className="font-semibold text-slate-900 text-sm mt-2">
         {subject.name}
       </p>
       <p className="text-xs text-slate-400 mt-1">
-        {subject._count.quizzes}{" "}
-        {subject._count.quizzes === 1 ? "quiz" : "quizzes"} &middot;{" "}
-        {subject._count.flashcards} cards
+        {subject._count.flashcards > 0
+          ? `${subject._count.flashcards} cards`
+          : "No cards yet"}
       </p>
-    </div>
+    </Link>
   )
 }
 
