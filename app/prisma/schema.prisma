@@ -107,6 +107,7 @@ model Flashcard {
   explanation String?    @db.Text
   difficulty  Difficulty @default(MEDIUM)
   frequency   Int        @default(0)
+  imageUrl    String?
   subjectId   String
   topicId     String?
   createdAt   DateTime   @default(now())
