@@ -21,6 +21,7 @@ type Flashcard = {
   explanation: string | null
   difficulty: "EASY" | "MEDIUM" | "HARD"
   frequency: number
+  imageUrl: string | null
   sources: FlashcardSource[]
 }
 
@@ -177,6 +178,17 @@ export function QuizSession({
         <p className="text-lg font-semibold text-slate-900 leading-relaxed flex-1">
           {card.question}
         </p>
+
+        {/* Diagram — shown before and after reveal */}
+        {card.imageUrl && (
+          <div className="rounded-xl border border-slate-100 overflow-hidden mt-4">
+            <img
+              src={`/flashcard-images/${card.imageUrl}`}
+              alt="Exam diagram"
+              className="w-full"
+            />
+          </div>
+        )}
 
         {/* Reveal / Answer area */}
         {!revealed ? (
