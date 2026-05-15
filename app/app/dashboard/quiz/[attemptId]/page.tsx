@@ -34,6 +34,7 @@ export default async function QuizPage({
                   explanation: true,
                   difficulty: true,
                   frequency: true,
+                  imageUrl: true,
                   sources: {
                     select: {
                       paper: true,
