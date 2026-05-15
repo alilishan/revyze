@@ -1,5 +1,6 @@
 import { auth } from "@/auth"
 import { getDashboardData } from "@/lib/dashboard"
+import { formatDuration } from "@/lib/format"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
@@ -169,7 +170,7 @@ function UserQuizCard({ attempt }: { attempt: UserQuiz }) {
         <div>
           <p className={`text-2xl font-black ${color}`}>{attempt.score}%</p>
           <p className="text-xs text-slate-400 mt-0.5">
-            {attempt.correctAnswers}/{attempt.totalQuestions} correct &middot; {date}
+            {attempt.correctAnswers}/{attempt.totalQuestions} correct &middot; {formatDuration(attempt.durationSeconds)} &middot; {date}
           </p>
         </div>
         <Link
@@ -194,14 +195,19 @@ function AttemptCard({ attempt }: { attempt: Attempt }) {
       </p>
       <div className="flex items-center justify-between mt-2">
         <span className={`text-lg font-bold ${color}`}>{attempt.score}%</span>
-        <span className="text-xs text-slate-400">
-          {attempt.completedAt
-            ? new Date(attempt.completedAt).toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "short",
-              })
-            : "In progress"}
-        </span>
+        <div className="text-right">
+          <p className="text-xs text-slate-400">
+            {attempt.completedAt
+              ? new Date(attempt.completedAt).toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "short",
+                })
+              : "In progress"}
+          </p>
+          {attempt.completedAt && (
+            <p className="text-xs text-slate-400">{formatDuration(attempt.durationSeconds)}</p>
+          )}
+        </div>
       </div>
     </div>
   )
