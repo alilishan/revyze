@@ -79,7 +79,7 @@ export default async function QuizPage({
         </Link>
       </div>
 
-      <QuizSession attemptId={attempt.id} flashcards={flashcards} />
+      <QuizSession attemptId={attempt.id} flashcards={flashcards} startedAt={attempt.startedAt} />
     </main>
   )
 }

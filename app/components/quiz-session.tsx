@@ -4,6 +4,8 @@ import { useState, useRef } from "react"
 import { completeQuizAttempt } from "@/actions/quiz"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
+import { useTimer } from "@/hooks/use-timer"
+import { formatDuration } from "@/lib/format"
 
 type FlashcardSource = {
   paper: string
@@ -44,9 +46,11 @@ const GRADE = (score: number) => {
 export function QuizSession({
   attemptId,
   flashcards,
+  startedAt,
 }: {
   attemptId: string
   flashcards: Flashcard[]
+  startedAt: Date
 }) {
   const router = useRouter()
   const [index, setIndex] = useState(0)
@@ -57,6 +61,8 @@ export function QuizSession({
 
   const sessionStart = useRef(Date.now())
   const cardStart = useRef(Date.now())
+  const { formatted } = useTimer(startedAt)
+  const [totalDuration, setTotalDuration] = useState(0)
 
   const card = flashcards[index]
   const total = flashcards.length
@@ -74,6 +80,7 @@ export function QuizSession({
       setSaving(true)
       const duration = Math.round((Date.now() - sessionStart.current) / 1000)
       await completeQuizAttempt(attemptId, updated, duration)
+      setTotalDuration(duration)
       setComplete(true)
       setSaving(false)
     } else {
@@ -94,7 +101,7 @@ export function QuizSession({
         <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center w-full max-w-sm">
           <p className="text-6xl font-black text-slate-900">{score}%</p>
           <p className="text-slate-500 mt-2 text-sm">
-            {correct} out of {total} correct
+            {correct} out of {total} correct &middot; {formatDuration(totalDuration)}
           </p>
           <p className={`text-xl font-semibold mt-4 ${grade.color}`}>
             {grade.emoji} {grade.label}
@@ -111,6 +118,7 @@ export function QuizSession({
                 <span className="line-clamp-1 flex-1">
                   {flashcards[i].question}
                 </span>
+                <span className="tabular-nums shrink-0">{a.timeSpentSeconds}s</span>
               </div>
             ))}
           </div>
@@ -148,6 +156,9 @@ export function QuizSession({
         </div>
         <span className="text-xs text-slate-400 tabular-nums whitespace-nowrap">
           {index + 1} / {total}
+        </span>
+        <span className="text-xs text-slate-400 tabular-nums whitespace-nowrap">
+          ⏱ {formatted}
         </span>
       </div>
 
