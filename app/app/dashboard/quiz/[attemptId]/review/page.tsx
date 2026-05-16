@@ -16,10 +16,13 @@ const DIFF_STYLES = {
   HARD: "bg-red-100 text-red-700",
 }
 
-type Props = { params: Promise<{ attemptId: string }> }
+type Props = {
+  params: Promise<{ attemptId: string }>
+  searchParams: Promise<{ filter?: string }>
+}
 
-export default async function ReviewPage({ params }: Props) {
-  const [session, { attemptId }] = await Promise.all([auth(), params])
+export default async function ReviewPage({ params, searchParams }: Props) {
+  const [session, { attemptId }, { filter }] = await Promise.all([auth(), params, searchParams])
   if (!session?.user?.id) redirect("/login")
 
   const attempt = await prisma.quizAttempt.findUnique({
@@ -62,11 +65,13 @@ export default async function ReviewPage({ params }: Props) {
 
   // Merge answers into the ordered flashcard list
   const answerMap = new Map(attempt.answers.map((a) => [a.flashcardId, a]))
-  const items = attempt.quiz.quizFlashcards.map((qf, i) => ({
+  const allItems = attempt.quiz.quizFlashcards.map((qf, i) => ({
     index: i + 1,
     flashcard: qf.flashcard,
     answer: answerMap.get(qf.flashcard.id) ?? null,
   }))
+  const showMissed = filter === "missed"
+  const items = showMissed ? allItems.filter((it) => it.answer && !it.answer.isCorrect) : allItems
 
   const scoreColor =
     attempt.score >= 80
@@ -132,6 +137,30 @@ export default async function ReviewPage({ params }: Props) {
             <p className="text-xs text-slate-400">Duration</p>
           </div>
         </div>
+      </div>
+
+      {/* Filter toggle */}
+      <div className="flex items-center gap-2">
+        <Link
+          href={`/dashboard/quiz/${attempt.id}/review`}
+          className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
+            !showMissed
+              ? "bg-slate-900 text-white border-slate-900"
+              : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
+          }`}
+        >
+          All ({allItems.length})
+        </Link>
+        <Link
+          href={`/dashboard/quiz/${attempt.id}/review?filter=missed`}
+          className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
+            showMissed
+              ? "bg-red-500 text-white border-red-500"
+              : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
+          }`}
+        >
+          Missed ({allItems.filter((it) => it.answer && !it.answer.isCorrect).length})
+        </Link>
       </div>
 
       {/* Per-question breakdown */}
