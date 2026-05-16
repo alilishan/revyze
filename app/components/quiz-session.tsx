@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { useTimer } from "@/hooks/use-timer"
 import { formatDuration } from "@/lib/format"
+import { HtmlContent } from "@/components/html-content"
+import { stripHtml } from "@/lib/html"
 
 type FlashcardSource = {
   paper: string
@@ -117,7 +119,7 @@ export function QuizSession({
               >
                 <span>{a.isCorrect ? "✓" : "✗"}</span>
                 <span className="line-clamp-1 flex-1">
-                  {flashcards[i].question}
+                  {stripHtml(flashcards[i].question)}
                 </span>
                 <span className="tabular-nums shrink-0">{a.timeSpentSeconds}s</span>
               </div>
@@ -175,9 +177,10 @@ export function QuizSession({
         </div>
 
         {/* Question */}
-        <p className="text-lg font-semibold text-slate-900 leading-relaxed flex-1">
-          {card.question}
-        </p>
+        <HtmlContent
+          html={card.question}
+          className="text-lg font-semibold text-slate-900 leading-relaxed flex-1 [&_ul]:mt-2 [&_ul]:ml-5 [&_ul]:list-disc [&_li]:mb-1 [&_li]:font-normal"
+        />
 
         {/* Diagram — shown before and after reveal */}
         {card.imageUrl && (
@@ -201,11 +204,9 @@ export function QuizSession({
               <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
                 Answer
               </p>
-              <p className="text-slate-800 leading-relaxed">{card.answer}</p>
+              <HtmlContent html={card.answer} className="text-slate-800 leading-relaxed [&_ul]:mt-2 [&_ul]:ml-5 [&_ul]:list-disc [&_li]:mb-1" />
               {card.explanation && (
-                <p className="text-sm text-slate-500 leading-relaxed border-l-2 border-slate-200 pl-3 mt-2">
-                  {card.explanation}
-                </p>
+                <HtmlContent html={card.explanation} className="text-sm text-slate-500 leading-relaxed border-l-2 border-slate-200 pl-3 mt-2 [&_ul]:mt-1 [&_ul]:ml-4 [&_ul]:list-disc [&_li]:mb-0.5" />
               )}
 
               {card.frequency > 0 && (
