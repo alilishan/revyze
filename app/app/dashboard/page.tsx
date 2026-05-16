@@ -1,5 +1,5 @@
 import { auth } from "@/auth"
-import { getDashboardData } from "@/lib/dashboard"
+import { getDashboardData, QUIZ_PAGE_SIZE } from "@/lib/dashboard"
 import { formatDuration } from "@/lib/format"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -36,12 +36,21 @@ const scoreColor = (pct: number) =>
         ? "text-amber-500"
         : "text-red-500"
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>
+}) {
   const session = await auth()
   if (!session?.user?.id) return null
 
-  const { userQuizzes, recentAttempts, subjects, stats } =
-    await getDashboardData(session.user.id)
+  const { page: pageParam } = await searchParams
+  const page = Math.max(1, parseInt(pageParam ?? "1") || 1)
+
+  const { userQuizzes, totalQuizzes, recentAttempts, subjects, stats } =
+    await getDashboardData(session.user.id, page)
+
+  const totalPages = Math.max(1, Math.ceil(totalQuizzes / QUIZ_PAGE_SIZE))
 
   const firstName = session.user.name?.split(" ")[0] ?? "there"
   const totalAttempts = stats._count.id
@@ -93,14 +102,43 @@ export default async function DashboardPage() {
               + New quiz
             </Link>
           </div>
-          {userQuizzes.length === 0 ? (
+          {userQuizzes.length === 0 && page === 1 ? (
             <EmptyState message="No quizzes yet — hit 'Start Quiz' to begin!" />
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {userQuizzes.map((attempt) => (
-                <UserQuizCard key={attempt.id} attempt={attempt} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {userQuizzes.map((attempt) => (
+                  <UserQuizCard key={attempt.id} attempt={attempt} />
+                ))}
+              </div>
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between pt-1">
+                  <Link
+                    href={`/dashboard?page=${page - 1}`}
+                    className={cn(
+                      buttonVariants({ variant: "outline", size: "sm" }),
+                      page <= 1 && "pointer-events-none opacity-40",
+                    )}
+                    aria-disabled={page <= 1}
+                  >
+                    ← Prev
+                  </Link>
+                  <span className="text-xs text-slate-400 tabular-nums">
+                    {page} / {totalPages}
+                  </span>
+                  <Link
+                    href={`/dashboard?page=${page + 1}`}
+                    className={cn(
+                      buttonVariants({ variant: "outline", size: "sm" }),
+                      page >= totalPages && "pointer-events-none opacity-40",
+                    )}
+                    aria-disabled={page >= totalPages}
+                  >
+                    Next →
+                  </Link>
+                </div>
+              )}
+            </>
           )}
         </section>
 
@@ -157,26 +195,24 @@ function UserQuizCard({ attempt }: { attempt: UserQuiz }) {
     : ""
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col gap-3">
-      <div>
+    <div className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col gap-3 hover:border-slate-300 transition-colors">
+      <Link href={`/dashboard/quiz/${attempt.id}/review`} className="block">
         <p className="text-xs font-medium text-slate-400 uppercase tracking-wide">
           {attempt.quiz.subject.name}
         </p>
         <p className="font-semibold text-slate-900 mt-0.5 line-clamp-1 text-sm">
           {attempt.quiz.title}
         </p>
-      </div>
-
-      <div className="flex items-end justify-between mt-auto">
-        <div>
-          <p className={`text-2xl font-black ${color}`}>{attempt.score}%</p>
-          <p className="text-xs text-slate-400 mt-0.5">
-            {attempt.correctAnswers}/{attempt.totalQuestions} correct &middot; {formatDuration(attempt.durationSeconds)} &middot; {date}
-          </p>
-        </div>
+        <p className={`text-2xl font-black mt-2 ${color}`}>{attempt.score}%</p>
+        <p className="text-xs text-slate-400 mt-0.5">
+          {attempt.correctAnswers}/{attempt.totalQuestions} correct &middot;{" "}
+          {formatDuration(attempt.durationSeconds)} &middot; {date}
+        </p>
+      </Link>
+      <div className="flex gap-2 mt-auto">
         <Link
           href={`/dashboard/quiz/start?subjectId=${attempt.quiz.subject.id}`}
-          className={cn(buttonVariants({ size: "sm", variant: "outline" }))}
+          className={cn(buttonVariants({ size: "sm", variant: "outline" }), "flex-1")}
         >
           Retake
         </Link>
