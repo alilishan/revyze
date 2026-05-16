@@ -141,6 +141,13 @@ export function QuizSession({
               Dashboard
             </Button>
           </div>
+          <Button
+            variant="outline"
+            className="w-full mt-2"
+            onClick={() => router.push(`/dashboard/quiz/${attemptId}/review`)}
+          >
+            View full review →
+          </Button>
         </div>
       </div>
     )
