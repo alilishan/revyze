@@ -53,7 +53,7 @@ export default async function QuizPage({
   })
 
   if (!attempt) redirect("/dashboard")
-  if (attempt.completedAt) redirect("/dashboard")
+  if (attempt.completedAt) redirect(`/dashboard/quiz/${attempt.id}/review`)
 
   const flashcards = attempt.quiz.quizFlashcards.map((qf) => qf.flashcard)
 
