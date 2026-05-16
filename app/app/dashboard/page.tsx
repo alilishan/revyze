@@ -218,18 +218,33 @@ function SubjectCard({ subject }: { subject: Subject }) {
   const hasCards = subject._count.flashcards > 0
 
   return (
-    <Link
-      href={hasCards ? "/dashboard/quiz/start" : "#"}
-      className="bg-white rounded-xl border border-slate-200 p-4 hover:border-slate-300 transition-colors block"
-    >
-      <span className="text-2xl">{emoji}</span>
-      <p className="font-semibold text-slate-900 text-sm mt-2">
-        {subject.name}
-      </p>
-      <p className="text-xs text-slate-400 mt-1">
-        {hasCards ? `${subject._count.flashcards} cards` : "No cards yet"}
-      </p>
-    </Link>
+    <div className="bg-white rounded-xl border border-slate-200 p-4 hover:border-slate-300 transition-colors flex flex-col gap-3">
+      <div>
+        <span className="text-2xl">{emoji}</span>
+        <p className="font-semibold text-slate-900 text-sm mt-2">
+          {subject.name}
+        </p>
+        <p className="text-xs text-slate-400 mt-1">
+          {hasCards ? `${subject._count.flashcards} cards` : "No cards yet"}
+        </p>
+      </div>
+      {hasCards && (
+        <div className="flex gap-2 mt-auto">
+          <Link
+            href={`/dashboard/${subject.code}/questions`}
+            className="flex-1 text-center text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg py-1.5 transition-colors"
+          >
+            Questions
+          </Link>
+          <Link
+            href="/dashboard/quiz/start"
+            className="flex-1 text-center text-xs font-medium text-white bg-slate-900 hover:bg-slate-700 rounded-lg py-1.5 transition-colors"
+          >
+            Quiz →
+          </Link>
+        </div>
+      )}
+    </div>
   )
 }
 
