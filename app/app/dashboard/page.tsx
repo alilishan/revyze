@@ -4,6 +4,7 @@ import { formatDuration } from "@/lib/format"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
+import { nameToSlug } from "@/lib/subject-slug"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -231,7 +232,7 @@ function SubjectCard({ subject }: { subject: Subject }) {
       {hasCards && (
         <div className="flex gap-2 mt-auto">
           <Link
-            href={`/dashboard/${subject.code}/questions`}
+            href={`/dashboard/${nameToSlug(subject.name)}/questions`}
             className="flex-1 text-center text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg py-1.5 transition-colors"
           >
             Questions

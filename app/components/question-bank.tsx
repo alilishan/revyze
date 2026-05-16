@@ -63,7 +63,7 @@ export function QuestionBank({ flashcards }: { flashcards: QuestionCard[] }) {
   }, [])
 
   return (
-    <div className="flex gap-5 items-start">
+    <div className="flex gap-5 items-stretch">
       {/* Left: filter bar + list */}
       <div className="flex-1 min-w-0 flex flex-col gap-4">
 

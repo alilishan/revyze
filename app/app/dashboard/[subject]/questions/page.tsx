@@ -9,20 +9,25 @@ import type { Metadata } from 'next'
 
 type Props = { params: Promise<{ subject: string }> }
 
+async function findSubject(slug: string) {
+  // slug is e.g. "biology", "computer-science" — match against lowercased name
+  return prisma.subject.findFirst({
+    where: { name: { equals: slug.replace(/-/g, ' ') } },
+    select: { id: true, name: true },
+  })
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { subject: code } = await params
-  const subject = await prisma.subject.findUnique({ where: { code }, select: { name: true } })
+  const { subject: slug } = await params
+  const subject = await findSubject(slug)
   return { title: subject ? `${subject.name} Questions — IGCSE FlashCards` : 'Questions — IGCSE FlashCards' }
 }
 
 export default async function QuestionsPage({ params }: Props) {
-  const [session, { subject: code }] = await Promise.all([auth(), params])
+  const [session, { subject: slug }] = await Promise.all([auth(), params])
   if (!session?.user?.id) redirect('/login')
 
-  const subject = await prisma.subject.findUnique({
-    where: { code },
-    select: { id: true, name: true },
-  })
+  const subject = await findSubject(slug)
   if (!subject) redirect('/dashboard')
 
   const flashcards = await prisma.flashcard.findMany({
