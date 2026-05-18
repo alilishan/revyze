@@ -8,7 +8,7 @@ import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import type { Metadata } from "next"
 
-export const metadata: Metadata = { title: "Quiz Review — IGCSE FlashCards" }
+export const metadata: Metadata = { title: "Quiz Review — Revyze" }
 
 const DIFF_STYLES = {
   EASY: "bg-emerald-100 text-emerald-700",
@@ -145,7 +145,7 @@ export default async function ReviewPage({ params, searchParams }: Props) {
           href={`/dashboard/quiz/${attempt.id}/review`}
           className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
             !showMissed
-              ? "bg-slate-900 text-white border-slate-900"
+              ? "bg-indigo-600 text-white border-indigo-600"
               : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
           }`}
         >

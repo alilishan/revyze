@@ -20,7 +20,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "IGCSE FlashCards",
+  title: "Revyze",
   description:
     "Revise smarter for Cambridge IGCSE with flashcards and timed quizzes.",
 };

@@ -6,7 +6,7 @@ import Link from "next/link"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Start Quiz — IGCSE FlashCards",
+  title: "Start Quiz — Revyze",
 }
 
 const DIFFICULTIES = [
@@ -82,7 +82,7 @@ export default async function StartQuizPage({
                     className={cn(
                       "border rounded-xl p-3 text-sm transition-colors",
                       "border-slate-200 bg-white",
-                      "peer-checked:border-slate-900 peer-checked:bg-slate-900 peer-checked:text-white"
+                      "peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:text-white"
                     )}
                   >
                     <p className="font-medium leading-tight">{subject.name}</p>
@@ -114,7 +114,7 @@ export default async function StartQuizPage({
                     className={cn(
                       "border rounded-xl p-3 transition-colors",
                       "border-slate-200 bg-white",
-                      "peer-checked:border-slate-900 peer-checked:bg-slate-900 peer-checked:text-white"
+                      "peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:text-white"
                     )}
                   >
                     <p className="text-sm font-medium">{d.label}</p>
@@ -144,7 +144,7 @@ export default async function StartQuizPage({
                     className={cn(
                       "border rounded-xl p-3 text-center transition-colors",
                       "border-slate-200 bg-white",
-                      "peer-checked:border-slate-900 peer-checked:bg-slate-900 peer-checked:text-white"
+                      "peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:text-white"
                     )}
                   >
                     <p className="text-lg font-bold">{n}</p>
@@ -158,7 +158,7 @@ export default async function StartQuizPage({
           </fieldset>
 
           {/* ── Scoring note ────────────────────────────────────────── */}
-          <div className="bg-slate-50 rounded-xl border border-slate-200 px-4 py-3 text-xs text-slate-500 space-y-1">
+          <div className="bg-indigo-50 rounded-xl border border-indigo-100 px-4 py-3 text-xs text-slate-500 space-y-1">
             <p className="font-medium text-slate-700">How scoring works</p>
             <p>Each card you mark as &quot;Got it&quot; scores 1 point.</p>
             <p>
