@@ -16,6 +16,8 @@ const SAMPLE_CARDS = [
     pillClass: "bg-emerald-100 text-emerald-700",
     question: "Describe the process of osmosis in plant cells.",
     rotate: -5,
+    fanOut: -13,
+    fanIn: -1,
     x: -16,
     yBase: 16,
   },
@@ -24,6 +26,8 @@ const SAMPLE_CARDS = [
     pillClass: "bg-blue-100 text-blue-700",
     question: "State Newton's second law of motion.",
     rotate: 3,
+    fanOut: 10,
+    fanIn: 1,
     x: 8,
     yBase: -8,
   },
@@ -32,6 +36,8 @@ const SAMPLE_CARDS = [
     pillClass: "bg-violet-100 text-violet-700",
     question: "What is the role of a catalyst in a chemical reaction?",
     rotate: 0,
+    fanOut: 4,
+    fanIn: -2,
     x: 0,
     yBase: 0,
   },
@@ -122,15 +128,25 @@ export function HeroSection({ isLoggedIn }: Props) {
               <motion.div
                 key={card.subject}
                 className="absolute w-64 bg-white rounded-2xl shadow-xl p-5"
-                style={{ rotate: card.rotate, x: card.x, zIndex: SAMPLE_CARDS.length - i }}
+                style={{ x: card.x, zIndex: SAMPLE_CARDS.length - i }}
+                initial={{ rotate: card.rotate }}
                 animate={prefersReduced ? {} : {
                   y: [card.yBase, card.yBase - 10, card.yBase],
+                  rotate: [card.rotate, card.fanOut, card.rotate, card.fanIn, card.rotate],
                 }}
                 transition={{
-                  duration: 5,
-                  delay: i * 0.5,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
+                  y: {
+                    duration: 5,
+                    delay: i * 0.5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  },
+                  rotate: {
+                    duration: 12,
+                    delay: i * 0.4,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  },
                 }}
               >
                 <span className={`inline-block text-xs font-medium px-2.5 py-1 rounded-full ${card.pillClass}`}>
