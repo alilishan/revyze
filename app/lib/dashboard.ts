@@ -16,7 +16,7 @@ export async function getDashboardData(userId: string, page = 1) {
           quiz: {
             select: {
               title: true,
-              subject: { select: { id: true, name: true } },
+              subject: { select: { id: true, name: true, code: true } },
             },
           },
         },
@@ -32,7 +32,7 @@ export async function getDashboardData(userId: string, page = 1) {
           quiz: {
             select: {
               title: true,
-              subject: { select: { name: true } },
+              subject: { select: { name: true, code: true } },
             },
           },
         },
