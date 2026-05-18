@@ -84,11 +84,11 @@ export default async function HomePage() {
             </p>
           </div>
 
-          {/* SEALabs */}
+          {/* SEAL Labs */}
           <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-white uppercase tracking-widest">SEALabs</h3>
+            <h3 className="text-xs font-semibold text-white uppercase tracking-widest">SEAL Labs</h3>
             <p className="text-xs text-indigo-300 leading-relaxed">
-              Revyze is a product of SEALabs — building tools for learners and educators.
+              Revyze is a product of SEAL Labs — building tools for learners and educators.
             </p>
           </div>
 
@@ -98,7 +98,7 @@ export default async function HomePage() {
         <div className="border-t border-indigo-900">
           <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
             <p className="text-xs text-indigo-500">
-              © {new Date().getFullYear()} SEALabs. All rights reserved.
+              © {new Date().getFullYear()} SEAL Labs. All rights reserved.
             </p>
             <div className="flex items-center gap-1.5">
               <span
