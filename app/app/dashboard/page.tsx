@@ -35,7 +35,10 @@ export default async function DashboardPage({
     await getDashboardData(session.user.id, page)
 
   const totalPages = Math.max(1, Math.ceil(totalQuizzes / QUIZ_PAGE_SIZE))
-  const firstName = session.user.name?.split(" ")[0] ?? "there"
+  const firstName =
+    session.user.name?.split(" ")[0] ??
+    session.user.email?.split("@")[0] ??
+    "there"
   const totalAttempts = stats._count.id
   const avgScore = stats._avg.score !== null ? Math.round(stats._avg.score) : null
 
