@@ -4,8 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-IGCSE FlashCards — a multi-user flashcard and quiz platform for Cambridge IGCSE students.
+**Revyze** — a multi-user flashcard and quiz platform for Cambridge IGCSE students.
 The Next.js 16 app lives inside `app/`. Run all dev commands from there (`cd app`).
+Brand name is "Revyze" (wordmark: REVY in slate-900, ZE in indigo-600). Do not use "IGCSE FlashCards".
 
 ## Commands
 
@@ -40,16 +41,41 @@ Copy `app/.env.example` to `app/.env.local` and fill in:
 - **Auth.js v5** (`next-auth@beta`) — magic link via Resend, Prisma adapter, database sessions
 - **Prisma 6** — `prisma.config.ts` handles datasource + seed config; `prisma.config.ts` overrides `package.json#prisma`
 - **MySQL** via `mysql2`
+- **framer-motion** — animations. Use `layoutId` for shared-layout transitions, `motion` components, `useReducedMotion()` for accessibility.
+- **react-icons/pi** — Phosphor Duotone icons (`PiLeaf`, `PiBrain`, etc.). **Never use emoji as UI elements** — always use icons from this package or Lucide.
 
 ## Architecture
 
 - **`app/app/`** — App Router. All pages are server components by default; add `'use client'` only where interactivity is needed.
-- **`app/actions/`** — Server actions. `db-health.ts` (DB health check), `auth.ts` (sign-in/sign-out).
+- **`app/actions/`** — Server actions.
+  - `auth.ts` — sign-in / sign-out
+  - `quiz.ts` — `createDynamicQuiz` (builds quiz + attempt, redirects), `completeQuizAttempt`
+  - `db-health.ts` — DB health check
 - **`app/lib/prisma.ts`** — Prisma client singleton. Always import `prisma` from here.
-- **`app/auth.ts`** — Auth.js v5 config. Import `auth`, `signIn`, `signOut`, `handlers` from here.
+- **`app/lib/dashboard.ts`** — `getDashboardData(userId, page)`, `QUIZ_PAGE_SIZE`.
+- **`app/lib/subject-colors.ts`** — `getSubjectColors(code)` maps IGCSE subject codes to color profiles.
+- **`app/lib/format.ts`** — `formatRelativeTime(date)`, `formatDuration(seconds)`.
+- **`app/auth.ts`** — Auth.js v5 config. Import `auth`, `signIn`, `signOut`, `handlers` from here. Includes `events.createUser` hook that backfills `user.name` from email prefix if blank.
 - **`app/prisma/schema.prisma`** — Source of truth for the DB. Run `prisma migrate dev` after changes.
 - **`app/components/ui/`** — shadcn/ui components.
+- **`app/components/animate-ui/`** — Custom animated components (built on framer-motion, NOT the animate-ui npm package which has incompatible deps).
+  - `toggle-group.tsx` — `<ToggleGroup>` with framer-motion `layoutId` sliding pill (indigo-600 active state). Used in quiz start form.
+- **`app/components/animated-cards.tsx`** — Stagger animation wrapper for card grids.
+- **`app/components/animated-counter.tsx`** — Animated number counter for stats.
+- **`app/components/greeting-card.tsx`** — Client component; dashboard hero banner with floating framer-motion bubbles.
+- **`app/components/hero-section.tsx`** — Landing page hero with fan-in/fan-out floating card stack.
+- **`app/components/user-quiz-card.tsx`** — Quiz attempt card for the dashboard grid.
+- **`app/components/subject-card.tsx`** — Subject tile for Browse Subjects section.
 - **`app/types/next-auth.d.ts`** — Augments `Session` and `User` with `id: string` and `role: Role`.
+
+### Client form extraction pattern
+When a page's form needs client-side interactivity (e.g., animated selections), keep the page as a server component and extract the form into a `quiz-form.tsx` (or similar) `'use client'` sibling file. Pass DB data as props; import the server action directly — Next.js App Router supports importing server actions in client components.
+
+### Design system conventions
+- Page backgrounds: `bg-indigo-50`
+- Accent / active state: `bg-indigo-600 text-white` — **do not change this when doing layout or icon work**
+- Text hierarchy: `text-slate-900` headings, `text-slate-500` secondary, `text-slate-400` muted
+- Card base: `bg-white rounded-xl border border-slate-200 shadow-sm`
 
 ## Auth
 
