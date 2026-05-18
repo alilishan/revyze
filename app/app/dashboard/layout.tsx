@@ -29,12 +29,6 @@ export default async function DashboardLayout({
             >
               Dashboard
             </Link>
-            <Link
-              href="/dashboard/quiz/start"
-              className="text-sm text-white bg-indigo-600 rounded-xl px-4 py-1.5 shadow-sm hover:-translate-y-0.5 transition-transform hidden sm:block"
-            >
-              Start Quiz →
-            </Link>
             <span className="text-sm text-slate-400 hidden md:block">
               {displayName}
             </span>
