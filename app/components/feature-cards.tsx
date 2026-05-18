@@ -32,7 +32,7 @@ const FEATURES = [
 
 export function FeatureCards() {
   return (
-    <section className="max-w-5xl mx-auto px-4 pb-16 grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <section className="max-w-5xl mx-auto px-4 pt-12 pb-16 grid grid-cols-1 sm:grid-cols-3 gap-4">
       {FEATURES.map((f) => {
         const Icon = f.icon
         return (
