@@ -4,6 +4,7 @@ import { formatDuration, formatRelativeTime } from "@/lib/format"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { AnimatedCards } from "@/components/animated-cards"
+import { GreetingCard } from "@/components/greeting-card"
 import { AnimatedCounter } from "@/components/animated-counter"
 import { UserQuizCard } from "@/components/user-quiz-card"
 import { SubjectCard } from "@/components/subject-card"
@@ -47,9 +48,7 @@ export default async function DashboardPage({
       <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
 
         {/* ── Greeting card ──────────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl shadow-xl p-6 flex items-center justify-between gap-4">
-          <div className="absolute top-0 right-0 w-36 h-36 bg-white/5 rounded-full -translate-y-12 translate-x-12 pointer-events-none" />
-          <div className="absolute bottom-0 left-1/3 w-24 h-24 bg-white/5 rounded-full translate-y-12 pointer-events-none" />
+        <GreetingCard>
 
           <div className="relative flex items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-white/25 border border-white/40 flex items-center justify-center shrink-0">
@@ -67,7 +66,7 @@ export default async function DashboardPage({
           >
             Start Quiz →
           </Link>
-        </section>
+        </GreetingCard>
 
         {/* ── Stats strip ────────────────────────────────────────────── */}
         <AnimatedCards className="grid grid-cols-3 gap-4" staggerMs={50}>
