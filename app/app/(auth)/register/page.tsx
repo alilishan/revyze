@@ -30,6 +30,7 @@ export default function RegisterPage() {
               type="text"
               placeholder="Your name"
               autoComplete="name"
+              required
             />
           </div>
           <div className="space-y-1.5">

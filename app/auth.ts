@@ -22,4 +22,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session
     },
   },
+  events: {
+    // When Auth.js creates a new user (e.g. first sign-in via /login with no
+    // prior upsert), fall back to the email prefix so name is never null.
+    async createUser({ user }) {
+      if (!user.name && user.email) {
+        const fallback = user.email.split("@")[0]
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { name: fallback },
+        })
+      }
+    },
+  },
 })
