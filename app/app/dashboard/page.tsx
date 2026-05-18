@@ -53,8 +53,8 @@ export default async function DashboardPage({
               <PiUserCircle className="text-2xl text-white/40" />
             </div>
             <div>
-              <p className="text-white/70 text-xs">Welcome back</p>
-              <h1 className="text-white font-medium text-xl">Hey, {firstName}!</h1>
+              <p className="text-white/70 text-xs">Welcome back, {firstName}!</p>
+              <h1 className="text-white font-medium text-xl">Ready to revise?</h1>
             </div>
           </div>
 
