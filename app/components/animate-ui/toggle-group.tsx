@@ -38,15 +38,15 @@ export function ToggleGroup<T extends string>({
           className={cn(
             'relative flex-1 flex flex-col items-center gap-1 rounded-lg py-2.5 px-2 text-sm font-medium transition-colors duration-150',
             selected === opt.value
-              ? 'text-slate-900'
-              : 'text-slate-400 hover:text-slate-600',
+              ? 'text-white'
+              : 'text-slate-500 hover:text-slate-700',
             itemClassName,
           )}
         >
           {selected === opt.value && (
             <motion.div
               layoutId={layoutId}
-              className="absolute inset-0 bg-white rounded-lg shadow-sm"
+              className="absolute inset-0 bg-indigo-600 rounded-lg"
               transition={{ type: 'spring', stiffness: 350, damping: 30 }}
             />
           )}
