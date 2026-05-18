@@ -2,39 +2,36 @@ import { prisma } from "@/lib/prisma"
 import { createDynamicQuiz } from "@/actions/quiz"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import {
+  PiShuffleAngular,
+  PiLeaf,
+  PiBrain,
+  PiLightning,
+  PiCalendarBlank,
+  PiTrophy,
+} from "react-icons/pi"
 import Link from "next/link"
+import type { IconType } from "react-icons"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Start Quiz — Revyze",
 }
 
-const DIFFICULTIES = [
-  { value: "MIXED", label: "🎲 Mixed", description: "All levels" },
-  { value: "EASY", label: "🟢 Easy", description: "Build confidence" },
-  { value: "MEDIUM", label: "🟡 Medium", description: "Core knowledge" },
-  { value: "HARD", label: "🔴 Hard", description: "Exam ready" },
-] as const
+const DIFFICULTIES: { value: string; icon: IconType; label: string; description: string }[] = [
+  { value: "MIXED",  icon: PiShuffleAngular, label: "Mixed",  description: "All levels"       },
+  { value: "EASY",   icon: PiLeaf,           label: "Easy",   description: "Build confidence" },
+  { value: "MEDIUM", icon: PiBrain,          label: "Medium", description: "Core knowledge"   },
+  { value: "HARD",   icon: PiLightning,      label: "Hard",   description: "Exam ready"       },
+]
 
 const CARD_COUNTS = [5, 10, 15, 20] as const
 
-const QUESTION_FILTERS = [
-  {
-    value: "ALL",
-    label: "🎲 All years",
-    description: "Random mix from the full question bank",
-  },
-  {
-    value: "LAST_5_YEARS",
-    label: "📅 Last 5 years",
-    description: "Questions from recent past papers only",
-  },
-  {
-    value: "TOP_FREQUENCY",
-    label: "⭐ Most frequent",
-    description: "Highest-appearing exam topics first",
-  },
-] as const
+const QUESTION_FILTERS: { value: string; icon: IconType; label: string; description: string }[] = [
+  { value: "ALL",           icon: PiShuffleAngular, label: "All years",     description: "Random mix from the full question bank"    },
+  { value: "LAST_5_YEARS",  icon: PiCalendarBlank,  label: "Last 5 years",  description: "Questions from recent past papers only"    },
+  { value: "TOP_FREQUENCY", icon: PiTrophy,         label: "Most frequent", description: "Highest-appearing exam topics first"       },
+]
 
 export default async function StartQuizPage({
   searchParams,
@@ -118,28 +115,31 @@ export default async function StartQuizPage({
             <legend className="text-sm font-semibold text-slate-800">
               Difficulty
             </legend>
-            <div className="grid grid-cols-2 gap-2">
-              {DIFFICULTIES.map((d) => (
-                <label key={d.value} className="cursor-pointer">
-                  <input
-                    type="radio"
-                    name="difficulty"
-                    value={d.value}
-                    defaultChecked={d.value === "MIXED"}
-                    className="sr-only peer"
-                  />
-                  <div
-                    className={cn(
-                      "border rounded-xl p-3 transition-colors",
-                      "border-slate-200 bg-white",
-                      "peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:text-white"
-                    )}
-                  >
-                    <p className="text-sm font-medium">{d.label}</p>
-                    <p className="text-xs opacity-60 mt-0.5">{d.description}</p>
-                  </div>
-                </label>
-              ))}
+            <div className="grid grid-cols-4 gap-2">
+              {DIFFICULTIES.map((d) => {
+                const Icon = d.icon
+                return (
+                  <label key={d.value} className="cursor-pointer">
+                    <input
+                      type="radio"
+                      name="difficulty"
+                      value={d.value}
+                      defaultChecked={d.value === "MIXED"}
+                      className="sr-only peer"
+                    />
+                    <div
+                      className={cn(
+                        "border rounded-xl p-3 text-center transition-colors",
+                        "border-slate-200 bg-white",
+                        "peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:text-white"
+                      )}
+                    >
+                      <Icon className="text-xl mx-auto mb-1 opacity-80" />
+                      <p className="text-xs font-medium">{d.label}</p>
+                    </div>
+                  </label>
+                )
+              })}
             </div>
           </fieldset>
 
@@ -148,31 +148,32 @@ export default async function StartQuizPage({
             <legend className="text-sm font-semibold text-slate-800">
               Question Selection
             </legend>
-            <div className="flex flex-col gap-2">
-              {QUESTION_FILTERS.map((f) => (
-                <label key={f.value} className="cursor-pointer">
-                  <input
-                    type="radio"
-                    name="questionFilter"
-                    value={f.value}
-                    defaultChecked={f.value === "ALL"}
-                    className="sr-only peer"
-                  />
-                  <div
-                    className={cn(
-                      "border rounded-xl px-4 py-3 transition-colors flex items-center gap-3",
-                      "border-slate-200 bg-white",
-                      "peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:text-white"
-                    )}
-                  >
-                    <span className="text-base">{f.label.split(" ")[0]}</span>
-                    <div>
-                      <p className="text-sm font-medium">{f.label.split(" ").slice(1).join(" ")}</p>
-                      <p className="text-xs opacity-60 mt-0.5">{f.description}</p>
+            <div className="grid grid-cols-3 gap-2">
+              {QUESTION_FILTERS.map((f) => {
+                const Icon = f.icon
+                return (
+                  <label key={f.value} className="cursor-pointer">
+                    <input
+                      type="radio"
+                      name="questionFilter"
+                      value={f.value}
+                      defaultChecked={f.value === "ALL"}
+                      className="sr-only peer"
+                    />
+                    <div
+                      className={cn(
+                        "border rounded-xl p-3 transition-colors",
+                        "border-slate-200 bg-white",
+                        "peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:text-white"
+                      )}
+                    >
+                      <Icon className="text-2xl mb-1.5 opacity-80" />
+                      <p className="text-xs font-medium leading-tight">{f.label}</p>
+                      <p className="text-xs opacity-60 mt-0.5 leading-tight">{f.description}</p>
                     </div>
-                  </div>
-                </label>
-              ))}
+                  </label>
+                )
+              })}
             </div>
           </fieldset>
 
@@ -213,13 +214,18 @@ export default async function StartQuizPage({
             <p className="font-medium text-slate-700">How scoring works</p>
             <p>Each card you mark as &quot;Got it&quot; scores 1 point.</p>
             <p>
-              🟢 80%+ Excellent &nbsp;·&nbsp; 🔵 60% Good &nbsp;·&nbsp; 🟡 40%
-              Keep going &nbsp;·&nbsp; 🔴 Below 40% Needs work
+              <span className="text-emerald-600 font-medium">80%+</span> Excellent
+              &nbsp;·&nbsp;
+              <span className="text-blue-600 font-medium">60%</span> Good
+              &nbsp;·&nbsp;
+              <span className="text-amber-500 font-medium">40%</span> Keep going
+              &nbsp;·&nbsp;
+              <span className="text-red-500 font-medium">Below 40%</span> Needs work
             </p>
           </div>
 
           <Button type="submit" size="lg" className="w-full">
-            Start Quiz →
+            Start Quiz
           </Button>
         </form>
       )}
