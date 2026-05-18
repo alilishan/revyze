@@ -6,7 +6,7 @@ import Link from "next/link"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Quiz — Revyze",
+  title: "Quiz",
 }
 
 export default async function QuizPage({

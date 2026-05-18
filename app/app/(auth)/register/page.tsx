@@ -5,7 +5,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Create Account — Revyze",
+  title: "Create Account",
 }
 
 export default function RegisterPage() {

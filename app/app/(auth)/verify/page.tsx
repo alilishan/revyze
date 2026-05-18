@@ -3,7 +3,7 @@ import Link from "next/link"
 import { PiEnvelopeSimple } from "react-icons/pi"
 
 export const metadata: Metadata = {
-  title: "Check your email — Revyze",
+  title: "Check your email",
 }
 
 export default function VerifyPage() {

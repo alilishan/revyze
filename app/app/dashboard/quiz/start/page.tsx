@@ -4,7 +4,7 @@ import type { Metadata } from "next"
 import { QuizStartForm } from "./quiz-form"
 
 export const metadata: Metadata = {
-  title: "Start Quiz — Revyze",
+  title: "Start Quiz",
 }
 
 export default async function StartQuizPage({

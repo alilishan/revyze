@@ -20,7 +20,7 @@ async function findSubject(slug: string) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { subject: slug } = await params
   const subject = await findSubject(slug)
-  return { title: subject ? `${subject.name} Questions — Revyze` : 'Questions — Revyze' }
+  return { title: subject ? `${subject.name} Questions` : 'Questions' }
 }
 
 export default async function QuestionsPage({ params }: Props) {

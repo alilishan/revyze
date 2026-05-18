@@ -8,7 +8,7 @@ import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import type { Metadata } from "next"
 
-export const metadata: Metadata = { title: "Quiz Review — Revyze" }
+export const metadata: Metadata = { title: "Quiz Review" }
 
 const DIFF_STYLES = {
   EASY: "bg-emerald-100 text-emerald-700",
