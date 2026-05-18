@@ -16,32 +16,55 @@ export async function createDynamicQuiz(formData: FormData) {
     Math.max(1, parseInt(formData.get("cardCount") as string) || 10)
   )
 
+  const questionFilter = (formData.get("questionFilter") as string) || "ALL"
   const isMixed = difficultyParam === "MIXED"
   const difficulty = isMixed ? undefined : (difficultyParam as Difficulty)
+  const baseWhere = { subjectId, ...(difficulty && { difficulty }) }
 
-  const [subject, allCards] = await Promise.all([
-    prisma.subject.findUnique({
-      where: { id: subjectId },
-      select: { name: true },
-    }),
-    prisma.flashcard.findMany({
-      where: { subjectId, ...(difficulty && { difficulty }) },
+  const subject = await prisma.subject.findUnique({
+    where: { id: subjectId },
+    select: { name: true },
+  })
+  if (!subject) redirect("/dashboard/quiz/start")
+
+  let selected: { id: string }[]
+
+  if (questionFilter === "TOP_FREQUENCY") {
+    selected = await prisma.flashcard.findMany({
+      where: { ...baseWhere, frequency: { gt: 0 } },
+      orderBy: { frequency: "desc" },
       select: { id: true },
-    }),
-  ])
+      take: cardCount,
+    })
+  } else if (questionFilter === "LAST_5_YEARS") {
+    const minYear = String(new Date().getFullYear() - 5)
+    const pool = await prisma.flashcard.findMany({
+      where: { ...baseWhere, sources: { some: { year: { gte: minYear } } } },
+      select: { id: true },
+    })
+    selected = pool.sort(() => Math.random() - 0.5).slice(0, cardCount)
+  } else {
+    const pool = await prisma.flashcard.findMany({
+      where: baseWhere,
+      select: { id: true },
+    })
+    selected = pool.sort(() => Math.random() - 0.5).slice(0, cardCount)
+  }
 
-  if (!subject || allCards.length === 0) redirect("/dashboard/quiz/start")
-
-  // Shuffle and take N cards
-  const selected = allCards.sort(() => Math.random() - 0.5).slice(0, cardCount)
+  if (selected.length === 0) redirect("/dashboard/quiz/start")
 
   const diffLabel = isMixed
     ? "Mixed"
     : difficulty!.charAt(0) + difficulty!.slice(1).toLowerCase()
 
+  const filterLabel =
+    questionFilter === "LAST_5_YEARS" ? "Recent (5yr)"
+    : questionFilter === "TOP_FREQUENCY" ? "Top Questions"
+    : "Practice"
+
   const quiz = await prisma.quiz.create({
     data: {
-      title: `${diffLabel} Practice — ${subject.name}`,
+      title: `${diffLabel} ${filterLabel} — ${subject.name}`,
       subjectId,
       quizFlashcards: {
         create: selected.map((f, i) => ({ flashcardId: f.id, order: i })),

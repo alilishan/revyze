@@ -18,6 +18,24 @@ const DIFFICULTIES = [
 
 const CARD_COUNTS = [5, 10, 15, 20] as const
 
+const QUESTION_FILTERS = [
+  {
+    value: "ALL",
+    label: "🎲 All years",
+    description: "Random mix from the full question bank",
+  },
+  {
+    value: "LAST_5_YEARS",
+    label: "📅 Last 5 years",
+    description: "Questions from recent past papers only",
+  },
+  {
+    value: "TOP_FREQUENCY",
+    label: "⭐ Most frequent",
+    description: "Highest-appearing exam topics first",
+  },
+] as const
+
 export default async function StartQuizPage({
   searchParams,
 }: {
@@ -119,6 +137,39 @@ export default async function StartQuizPage({
                   >
                     <p className="text-sm font-medium">{d.label}</p>
                     <p className="text-xs opacity-60 mt-0.5">{d.description}</p>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          {/* ── Question filter ─────────────────────────────────────── */}
+          <fieldset className="space-y-3">
+            <legend className="text-sm font-semibold text-slate-800">
+              Question Selection
+            </legend>
+            <div className="flex flex-col gap-2">
+              {QUESTION_FILTERS.map((f) => (
+                <label key={f.value} className="cursor-pointer">
+                  <input
+                    type="radio"
+                    name="questionFilter"
+                    value={f.value}
+                    defaultChecked={f.value === "ALL"}
+                    className="sr-only peer"
+                  />
+                  <div
+                    className={cn(
+                      "border rounded-xl px-4 py-3 transition-colors flex items-center gap-3",
+                      "border-slate-200 bg-white",
+                      "peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:text-white"
+                    )}
+                  >
+                    <span className="text-base">{f.label.split(" ")[0]}</span>
+                    <div>
+                      <p className="text-sm font-medium">{f.label.split(" ").slice(1).join(" ")}</p>
+                      <p className="text-xs opacity-60 mt-0.5">{f.description}</p>
+                    </div>
                   </div>
                 </label>
               ))}
