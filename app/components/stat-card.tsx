@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils"
-import type { LucideIcon } from "lucide-react"
+import type { IconType } from "react-icons"
 
 type Props = {
-  icon: LucideIcon
+  icon: IconType
   label: string
   iconClass: string
   children: React.ReactNode

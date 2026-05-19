@@ -9,7 +9,7 @@ import { AnimatedCounter } from "@/components/animated-counter"
 import { UserQuizCard } from "@/components/user-quiz-card"
 import { SubjectCard } from "@/components/subject-card"
 import { getSubjectColors } from "@/lib/subject-colors"
-import { Library, Target, BarChart2, BookOpen } from "lucide-react"
+import { PiBooks, PiTarget, PiChartBar, PiBookOpen } from "react-icons/pi"
 import { StatCard } from "@/components/stat-card"
 import { PiUserCircle } from "react-icons/pi"
 import Link from "next/link"
@@ -71,13 +71,13 @@ export default async function DashboardPage({
 
         {/* ── Stats strip ────────────────────────────────────────────── */}
         <AnimatedCards className="grid grid-cols-3 gap-3 sm:gap-4" staggerMs={50}>
-          <StatCard icon={Library} label="Subjects" iconClass="bg-indigo-100 text-indigo-600">
+          <StatCard icon={PiBooks} label="Subjects" iconClass="bg-indigo-100 text-indigo-600">
             <AnimatedCounter value={subjects.length} className="text-xl sm:text-2xl font-medium text-slate-900" />
           </StatCard>
-          <StatCard icon={Target} label="Quizzes taken" iconClass="bg-emerald-100 text-emerald-600">
+          <StatCard icon={PiTarget} label="Quizzes taken" iconClass="bg-emerald-100 text-emerald-600">
             <AnimatedCounter value={totalAttempts} className="text-xl sm:text-2xl font-medium text-slate-900" />
           </StatCard>
-          <StatCard icon={BarChart2} label="Avg score" iconClass="bg-amber-100 text-amber-600">
+          <StatCard icon={PiChartBar} label="Avg score" iconClass="bg-amber-100 text-amber-600">
             {avgScore !== null ? (
               <AnimatedCounter value={avgScore} suffix="%" className="text-xl sm:text-2xl font-medium text-slate-900" />
             ) : (
@@ -215,7 +215,7 @@ function EmptyState({ message }: { message: string }) {
   return (
     <div className="bg-white rounded-xl border border-dashed border-slate-200 p-8 text-center">
       <div className="w-10 h-10 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-3">
-        <BookOpen className="w-5 h-5 text-indigo-400" />
+        <PiBookOpen className="w-5 h-5 text-indigo-400" />
       </div>
       <p className="text-sm text-slate-400">{message}</p>
       <Link
