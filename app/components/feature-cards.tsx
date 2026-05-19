@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { PiBooks, PiFileCheck, PiTrendUp } from 'react-icons/pi'
+import { PiBooks, PiExam, PiTrendUp } from 'react-icons/pi'
 import type { IconType } from 'react-icons'
 
 const FEATURES: { icon: IconType; iconBg: string; iconColor: string; stat: string; title: string; description: string }[] = [
@@ -14,7 +14,7 @@ const FEATURES: { icon: IconType; iconBg: string; iconColor: string; stat: strin
     description: 'Covers the complete Cambridge IGCSE curriculum — Sciences, Maths, Humanities, and Languages.',
   },
   {
-    icon: PiFileCheck,
+    icon: PiExam,
     iconBg: 'bg-emerald-100',
     iconColor: 'text-emerald-600',
     stat: '200+ Qs',
