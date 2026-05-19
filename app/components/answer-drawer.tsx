@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import type { QuestionCard } from '@/lib/filter-questions'
 import { HtmlContent } from '@/components/html-content'
+import { PiStar } from 'react-icons/pi'
 
 const DIFF_STYLES = {
   EASY: 'bg-emerald-100 text-emerald-700',
@@ -46,7 +47,7 @@ function DrawerContent({ card, onClose }: Props) {
           )}
           {card.frequency > 0 && (
             <span className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">
-              ⭐ {card.frequency}×
+              <PiStar className="inline-block text-amber-500 mr-0.5" />{card.frequency}×
             </span>
           )}
         </div>
