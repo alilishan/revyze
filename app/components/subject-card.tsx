@@ -43,7 +43,7 @@ export function SubjectCard({ subject }: Props) {
 
   return (
     <motion.div
-      className={`${colors.cardBg} border ${colors.border} rounded-xl shadow-sm p-4 flex flex-col gap-3`}
+      className={`${colors.cardBg} shadow-sm ${colors.shadow} rounded-xl  p-4 flex flex-col gap-3 h-full`}
       whileHover={{ y: -3 }}
       transition={{ type: 'spring', stiffness: 400 }}
     >

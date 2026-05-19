@@ -157,7 +157,7 @@ export default async function DashboardPage({
         {/* ── Browse Subjects ─────────────────────────────────────────── */}
         <section className="space-y-4">
           <h2 className="text-base font-medium text-slate-800">Browse Subjects</h2>
-          <AnimatedCards className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3" staggerMs={40}>
+          <AnimatedCards className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6" staggerMs={40}>
             {subjects.map((subject) => (
               <SubjectCard key={subject.id} subject={subject} />
             ))}

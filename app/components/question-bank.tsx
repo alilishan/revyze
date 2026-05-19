@@ -5,7 +5,7 @@ import { filterQuestions, type QuestionCard, type FilterState } from '@/lib/filt
 import { HtmlContent } from '@/components/html-content'
 import { AnswerDrawer } from '@/components/answer-drawer'
 import { ToggleGroup, Toggle } from '@/components/ui/toggle-group'
-import { PiTrophy, PiCalendarBlank, PiStar } from 'react-icons/pi'
+import { Calendar, Star, Trophy } from 'lucide-react'
 
 const DIFF_STYLES = {
   EASY: 'bg-emerald-100 text-emerald-700',
@@ -179,8 +179,8 @@ export function QuestionBank({ flashcards }: { flashcards: QuestionCard[] }) {
                 if (next) setFilters((f) => ({ ...f, sort: next }))
               }}
             >
-              <Toggle value="frequency"><PiTrophy className="inline-block mr-1" />Most Frequent</Toggle>
-              <Toggle value="year"><PiCalendarBlank className="inline-block mr-1" />Latest Year</Toggle>
+              <Toggle value="frequency"><Trophy className="inline-block" size={16} />Most Frequent</Toggle>
+              <Toggle value="year"><Calendar className="inline-block" size={16} />Latest Year</Toggle>
             </ToggleGroup>
             <span className="text-xs text-slate-400 ml-auto whitespace-nowrap">
               {filtered.length} result{filtered.length !== 1 ? 's' : ''}
@@ -263,7 +263,7 @@ export function QuestionBank({ flashcards }: { flashcards: QuestionCard[] }) {
                     </span>
                     {card.frequency > 0 && (
                       <span className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5 ml-2 shrink-0">
-                        <PiStar className="inline-block text-amber-500 mr-0.5" />{card.frequency}×
+                        <Star className="inline-block text-amber-500 mr-0.5" size={16} />{card.frequency}×
                       </span>
                     )}
                   </div>

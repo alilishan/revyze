@@ -24,7 +24,7 @@ type ToggleProps = {
 export function ToggleGroup({ className, ...props }: ToggleGroupProps) {
   return (
     <BaseToggleGroup
-      className={cn('flex bg-slate-100 rounded-lg p-0.5 gap-0.5', className)}
+      className={cn('flex bg-slate-100 rounded-lg p-1 gap-1 items-center', className)}
       {...(props as Parameters<typeof BaseToggleGroup>[0])}
     />
   )
@@ -34,8 +34,9 @@ export function Toggle({ className, ...props }: ToggleProps) {
   return (
     <BaseToggle
       className={cn(
+        'flex items-center gap-1',
         'rounded-md px-3 py-1.5 text-xs text-slate-500 transition-all cursor-pointer select-none',
-        'data-[pressed]:bg-white data-[pressed]:text-slate-900 data-[pressed]:font-semibold data-[pressed]:shadow-sm',
+        'data-pressed:bg-white data-pressed:text-slate-900 data-pressed:font-semibold data-pressed:shadow-sm',
         'hover:bg-white/50',
         className,
       )}
