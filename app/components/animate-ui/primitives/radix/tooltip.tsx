@@ -10,7 +10,7 @@ import {
   type SpringOptions,
   type HTMLMotionProps,
   type MotionValue,
-} from 'motion/react';
+} from 'framer-motion';
 
 import { getStrictContext } from '@/lib/get-strict-context';
 import { useControlledState } from '@/hooks/use-controlled-state';
