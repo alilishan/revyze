@@ -2,16 +2,16 @@
 
 import { motion } from 'framer-motion'
 import {
-  PiDna,
-  PiLightning,
-  PiFlask,
-  PiMathOperations,
-  PiBookOpenText,
-  PiCode,
-  PiClockCounterClockwise,
-  PiGlobeHemisphereWest,
   PiListBullets,
   PiPlay,
+  PiDnaDuotone,
+  PiLightningDuotone,
+  PiMathOperationsDuotone,
+  PiFlaskDuotone,
+  PiBookOpenTextDuotone,
+  PiCodeDuotone,
+  PiClockCounterClockwiseDuotone,
+  PiGlobeHemisphereWestDuotone,
 } from 'react-icons/pi'
 import { getSubjectColors } from '@/lib/subject-colors'
 import { nameToSlug } from '@/lib/subject-slug'
@@ -20,14 +20,14 @@ import Link from 'next/link'
 import type { IconType } from 'react-icons'
 
 const SUBJECT_ICONS: Record<string, IconType> = {
-  "0610": PiDna,
-  "0625": PiLightning,
-  "0620": PiFlask,
-  "0580": PiMathOperations,
-  "0500": PiBookOpenText,
-  "0478": PiCode,
-  "0470": PiClockCounterClockwise,
-  "0460": PiGlobeHemisphereWest,
+  "0610": PiDnaDuotone,
+  "0625": PiLightningDuotone,
+  "0620": PiFlaskDuotone,
+  "0580": PiMathOperationsDuotone,
+  "0500": PiBookOpenTextDuotone,
+  "0478": PiCodeDuotone,
+  "0470": PiClockCounterClockwiseDuotone,
+  "0460": PiGlobeHemisphereWestDuotone,
 }
 
 type Props = {
@@ -41,7 +41,7 @@ type Props = {
 
 export function SubjectCard({ subject }: Props) {
   const colors = getSubjectColors(subject.code)
-  const Icon = SUBJECT_ICONS[subject.code] ?? PiBookOpenText
+  const Icon = SUBJECT_ICONS[subject.code] ?? PiBookOpenTextDuotone
   const hasCards = subject._count.flashcards > 0
 
   return (
