@@ -10,6 +10,8 @@ import {
   PiCode,
   PiClockCounterClockwise,
   PiGlobeHemisphereWest,
+  PiListBullets,
+  PiPlay,
 } from 'react-icons/pi'
 import { getSubjectColors } from '@/lib/subject-colors'
 import { nameToSlug } from '@/lib/subject-slug'
@@ -43,13 +45,14 @@ export function SubjectCard({ subject }: Props) {
 
   return (
     <motion.div
-      className={`${colors.cardBg} shadow-sm ${colors.shadow} rounded-xl  p-4 flex flex-col gap-3 h-full`}
+      className={`${colors.cardBg} shadow-sm ${colors.shadow} rounded-xl p-3 flex items-center gap-3`}
       whileHover={{ y: -3 }}
       transition={{ type: 'spring', stiffness: 400 }}
     >
-      <div>
-        <Icon className={`text-2xl ${colors.iconColor}`} />
-        <p className="font-medium text-sm mt-2 text-slate-900">
+      <Icon className={`text-2xl shrink-0 ${colors.iconColor}`} />
+
+      <div className="flex-1 min-w-0">
+        <p className="font-medium text-sm text-slate-900 truncate leading-tight">
           {subject.name}
         </p>
         <p className="text-xs text-slate-400 mt-0.5">
@@ -58,18 +61,20 @@ export function SubjectCard({ subject }: Props) {
       </div>
 
       {hasCards && (
-        <div className="flex gap-2 mt-auto">
+        <div className="flex items-center gap-1 shrink-0">
           <Link
             href={`/dashboard/${nameToSlug(subject.name)}/questions`}
-            className="flex-1 text-center text-xs font-medium text-slate-600 bg-white/70 hover:bg-white border border-slate-200/60 rounded-lg py-1.5 transition-colors"
+            title="Browse questions"
+            className="p-1.5 rounded-lg text-slate-500 hover:bg-white/70 hover:text-slate-700 transition-colors"
           >
-            Questions
+            <PiListBullets className="text-base" />
           </Link>
           <Link
-            href="/dashboard/quiz/start"
-            className="flex-1 text-center text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg py-1.5 transition-colors"
+            href={`/dashboard/quiz/start?subjectId=${subject.id}`}
+            title="Start quiz"
+            className="p-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
           >
-            Quiz →
+            <PiPlay className="text-base" />
           </Link>
         </div>
       )}
