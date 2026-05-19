@@ -2,8 +2,8 @@
 
 import { motion } from 'framer-motion'
 import {
-  PiListBullets,
-  PiPlay,
+  PiListBulletsDuotone,
+  PiPlayDuotone,
   PiDnaDuotone,
   PiLightningDuotone,
   PiMathOperationsDuotone,
@@ -73,7 +73,7 @@ export function SubjectCard({ subject }: Props) {
                   />
                 }
               >
-                <PiListBullets className="text-base" />
+                <PiListBulletsDuotone className="text-base" />
               </TooltipTrigger>
               <TooltipContent>Browse questions</TooltipContent>
             </Tooltip>
@@ -87,7 +87,7 @@ export function SubjectCard({ subject }: Props) {
                   />
                 }
               >
-                <PiPlay className="text-base" />
+                <PiPlayDuotone className="text-base" />
               </TooltipTrigger>
               <TooltipContent>Start quiz</TooltipContent>
             </Tooltip>
