@@ -1,11 +1,12 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Library, FileCheck2, TrendingUp } from 'lucide-react'
+import { PiBooks, PiFileCheck, PiTrendUp } from 'react-icons/pi'
+import type { IconType } from 'react-icons'
 
-const FEATURES = [
+const FEATURES: { icon: IconType; iconBg: string; iconColor: string; stat: string; title: string; description: string }[] = [
   {
-    icon: Library,
+    icon: PiBooks,
     iconBg: 'bg-indigo-100',
     iconColor: 'text-indigo-600',
     stat: '8 subjects',
@@ -13,7 +14,7 @@ const FEATURES = [
     description: 'Covers the complete Cambridge IGCSE curriculum — Sciences, Maths, Humanities, and Languages.',
   },
   {
-    icon: FileCheck2,
+    icon: PiFileCheck,
     iconBg: 'bg-emerald-100',
     iconColor: 'text-emerald-600',
     stat: '200+ Qs',
@@ -21,7 +22,7 @@ const FEATURES = [
     description: 'Every flashcard is derived from real past papers with cross-year frequency analysis.',
   },
   {
-    icon: TrendingUp,
+    icon: PiTrendUp,
     iconBg: 'bg-violet-100',
     iconColor: 'text-violet-600',
     stat: '∞ Practice',

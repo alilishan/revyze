@@ -9,7 +9,8 @@ import { AnimatedCounter } from "@/components/animated-counter"
 import { UserQuizCard } from "@/components/user-quiz-card"
 import { SubjectCard } from "@/components/subject-card"
 import { getSubjectColors } from "@/lib/subject-colors"
-import { Library, Target, BarChart2, BookOpen } from "lucide-react"
+import { PiBooks, PiTarget, PiChartBar, PiBookOpen } from "react-icons/pi"
+import { StatCard } from "@/components/stat-card"
 import { PiUserCircle } from "react-icons/pi"
 import Link from "next/link"
 import type { Metadata } from "next"
@@ -69,44 +70,20 @@ export default async function DashboardPage({
         </GreetingCard>
 
         {/* ── Stats strip ────────────────────────────────────────────── */}
-        <AnimatedCards className="grid grid-cols-3 gap-4" staggerMs={50}>
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-indigo-100 text-indigo-600 rounded-xl p-2 shrink-0">
-                <Library className="w-4 h-4" />
-              </div>
-              <div>
-                <AnimatedCounter value={subjects.length} className="text-2xl font-medium text-slate-900" />
-                <p className="text-slate-500 text-xs">Subjects</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-emerald-100 text-emerald-600 rounded-xl p-2 shrink-0">
-                <Target className="w-4 h-4" />
-              </div>
-              <div>
-                <AnimatedCounter value={totalAttempts} className="text-2xl font-medium text-slate-900" />
-                <p className="text-slate-500 text-xs">Quizzes taken</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-amber-100 text-amber-600 rounded-xl p-2 shrink-0">
-                <BarChart2 className="w-4 h-4" />
-              </div>
-              <div>
-                {avgScore !== null ? (
-                  <AnimatedCounter value={avgScore} suffix="%" className="text-2xl font-medium text-slate-900" />
-                ) : (
-                  <span className="text-2xl font-medium text-slate-900">—</span>
-                )}
-                <p className="text-slate-500 text-xs">Avg score</p>
-              </div>
-            </div>
-          </div>
+        <AnimatedCards className="grid grid-cols-3 gap-3 sm:gap-4" staggerMs={50}>
+          <StatCard icon={PiBooks} label="Subjects" iconClass="bg-indigo-100 text-indigo-600">
+            <AnimatedCounter value={subjects.length} className="text-xl sm:text-2xl font-medium text-slate-900" />
+          </StatCard>
+          <StatCard icon={PiTarget} label="Quizzes taken" iconClass="bg-emerald-100 text-emerald-600">
+            <AnimatedCounter value={totalAttempts} className="text-xl sm:text-2xl font-medium text-slate-900" />
+          </StatCard>
+          <StatCard icon={PiChartBar} label="Avg score" iconClass="bg-amber-100 text-amber-600">
+            {avgScore !== null ? (
+              <AnimatedCounter value={avgScore} suffix="%" className="text-xl sm:text-2xl font-medium text-slate-900" />
+            ) : (
+              <span className="text-xl sm:text-2xl font-medium text-slate-900">—</span>
+            )}
+          </StatCard>
         </AnimatedCards>
 
         {/* ── Main grid ──────────────────────────────────────────────── */}
@@ -180,7 +157,7 @@ export default async function DashboardPage({
         {/* ── Browse Subjects ─────────────────────────────────────────── */}
         <section className="space-y-4">
           <h2 className="text-base font-medium text-slate-800">Browse Subjects</h2>
-          <AnimatedCards className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3" staggerMs={40}>
+          <AnimatedCards className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6" staggerMs={40}>
             {subjects.map((subject) => (
               <SubjectCard key={subject.id} subject={subject} />
             ))}
@@ -238,7 +215,7 @@ function EmptyState({ message }: { message: string }) {
   return (
     <div className="bg-white rounded-xl border border-dashed border-slate-200 p-8 text-center">
       <div className="w-10 h-10 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-3">
-        <BookOpen className="w-5 h-5 text-indigo-400" />
+        <PiBookOpen className="w-5 h-5 text-indigo-400" />
       </div>
       <p className="text-sm text-slate-400">{message}</p>
       <Link

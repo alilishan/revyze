@@ -3,6 +3,7 @@
 import { useState, useRef } from "react"
 import { completeQuizAttempt } from "@/actions/quiz"
 import { Button } from "@/components/ui/button"
+import { PiStar } from "react-icons/pi"
 import { useRouter } from "next/navigation"
 import { useTimer } from "@/hooks/use-timer"
 import { formatDuration } from "@/lib/format"
@@ -223,7 +224,7 @@ export function QuizSession({
                       Exam frequency
                     </span>
                     <span className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">
-                      ⭐ {card.frequency}× in past papers
+                      <PiStar className="inline-block text-amber-500 mr-0.5" />{card.frequency}× in past papers
                     </span>
                   </div>
 

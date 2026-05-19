@@ -1,6 +1,4 @@
-import { handleRegister } from "@/actions/auth"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { RegisterForm } from "./register-form"
 import type { Metadata } from "next"
 import Link from "next/link"
 
@@ -16,37 +14,7 @@ export default function RegisterPage() {
         Sign up for free — we&apos;ll send you a magic link to get started.
       </p>
 
-      <form action={handleRegister} className="space-y-4">
-        <div className="space-y-1.5">
-          <label htmlFor="name" className="block text-sm font-medium text-slate-700">
-            Full name
-          </label>
-          <Input
-            id="name"
-            name="name"
-            type="text"
-            placeholder="Your name"
-            autoComplete="name"
-            required
-          />
-        </div>
-        <div className="space-y-1.5">
-          <label htmlFor="email" className="block text-sm font-medium text-slate-700">
-            Email address
-          </label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="you@example.com"
-            required
-            autoComplete="email"
-          />
-        </div>
-        <Button type="submit" className="w-full">
-          Send magic link
-        </Button>
-      </form>
+      <RegisterForm />
 
       <p className="mt-5 text-center text-sm text-slate-500">
         Already have an account?{" "}

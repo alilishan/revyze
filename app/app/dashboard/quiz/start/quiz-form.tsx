@@ -2,7 +2,7 @@
 
 import { createDynamicQuiz } from "@/actions/quiz"
 import { ToggleGroup } from "@/components/animate-ui/toggle-group"
-import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/submit-button"
 import {
   PiShuffleAngular,
   PiLeaf,
@@ -145,9 +145,9 @@ export function QuizStartForm({
         </p>
       </div>
 
-      <Button type="submit" size="lg" className="w-full">
+      <SubmitButton size="lg" className="w-full" loadingText="Starting…">
         Start Quiz
-      </Button>
+      </SubmitButton>
     </form>
   )
 }

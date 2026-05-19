@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import type { QuestionCard } from '@/lib/filter-questions'
 import { HtmlContent } from '@/components/html-content'
+import { PiStar } from 'react-icons/pi'
 
 const DIFF_STYLES = {
   EASY: 'bg-emerald-100 text-emerald-700',
@@ -46,7 +47,7 @@ function DrawerContent({ card, onClose }: Props) {
           )}
           {card.frequency > 0 && (
             <span className="text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">
-              ⭐ {card.frequency}×
+              <PiStar className="inline-block text-amber-500 mr-0.5" />{card.frequency}×
             </span>
           )}
         </div>
@@ -123,6 +124,11 @@ function DrawerContent({ card, onClose }: Props) {
         {card.frequency > 0 && yearRange && (
           <span className="text-xs text-slate-500">
             Appeared {card.frequency} time{card.frequency !== 1 ? 's' : ''} in past papers ({yearRange})
+            {card.sources.length > 0 && card.sources.length < card.frequency && (
+              <span className="block text-slate-400 mt-0.5">
+                {card.sources.length} source{card.sources.length !== 1 ? 's' : ''} shown — frequency includes all paper variants
+              </span>
+            )}
           </span>
         )}
       </div>

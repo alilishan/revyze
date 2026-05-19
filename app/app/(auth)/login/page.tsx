@@ -1,6 +1,4 @@
-import { handleSignIn } from "@/actions/auth"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { LoginForm } from "./login-form"
 import type { Metadata } from "next"
 import Link from "next/link"
 
@@ -16,24 +14,7 @@ export default function LoginPage() {
         Enter your email and we&apos;ll send you a sign-in link.
       </p>
 
-      <form action={handleSignIn} className="space-y-4">
-        <div className="space-y-1.5">
-          <label htmlFor="email" className="block text-sm font-medium text-slate-700">
-            Email address
-          </label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="you@example.com"
-            required
-            autoComplete="email"
-          />
-        </div>
-        <Button type="submit" className="w-full">
-          Send sign-in link
-        </Button>
-      </form>
+      <LoginForm />
 
       <p className="mt-5 text-center text-sm text-slate-500">
         Don&apos;t have an account?{" "}
