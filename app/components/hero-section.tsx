@@ -53,7 +53,7 @@ export function HeroSection({ isLoggedIn }: Props) {
   return (
     <>
       <section className="bg-indigo-50">
-        <div className="max-w-5xl mx-auto px-4 py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="max-w-5xl mx-auto px-4 py-10 sm:py-16 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-center">
 
           <div className="space-y-6">
             <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-full px-4 py-1.5 text-xs">
@@ -64,7 +64,7 @@ export function HeroSection({ isLoggedIn }: Props) {
               200+ Biology questions live · more subjects coming soon
             </div>
 
-            <h1 className="text-4xl lg:text-5xl leading-tight font-medium">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl leading-tight font-medium">
               {HEADLINE_WORDS.map((word, i) => {
                 const isLast = i === HEADLINE_WORDS.length - 1
                 if (prefersReduced) {

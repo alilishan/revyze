@@ -102,8 +102,8 @@ export function QuizSession({
 
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center w-full max-w-sm">
-          <p className="text-6xl font-black text-slate-900">{score}%</p>
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-8 text-center w-full max-w-sm">
+          <p className="text-5xl sm:text-6xl font-black text-slate-900">{score}%</p>
           <p className="text-slate-500 mt-2 text-sm">
             {correct} out of {total} correct &middot; {formatDuration(totalDuration)}
           </p>
@@ -174,7 +174,7 @@ export function QuizSession({
       </div>
 
       {/* Card */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-8 min-h-72 flex flex-col">
+      <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 md:p-8 min-h-72 flex flex-col">
         {/* Difficulty badge */}
         <div className="mb-4">
           <span
@@ -187,7 +187,7 @@ export function QuizSession({
         {/* Question */}
         <HtmlContent
           html={card.question}
-          className="text-lg font-semibold text-slate-900 leading-relaxed flex-1 [&_ul]:mt-2 [&_ul]:ml-5 [&_ul]:list-disc [&_li]:mb-1 [&_li]:font-normal"
+          className="text-base sm:text-lg font-semibold text-slate-900 leading-relaxed flex-1 [&_ul]:mt-2 [&_ul]:ml-5 [&_ul]:list-disc [&_li]:mb-1 [&_li]:font-normal"
         />
 
         {/* Diagram — shown before and after reveal */}
@@ -218,7 +218,7 @@ export function QuizSession({
               )}
 
               {card.frequency > 0 && (
-                <div className="mt-4 rounded-xl bg-slate-50 border border-slate-100 px-4 py-3 space-y-2">
+                <div className="mt-4 rounded-xl bg-slate-50 border border-slate-100 px-3 py-2.5 sm:px-4 sm:py-3 space-y-2">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
                       Exam frequency

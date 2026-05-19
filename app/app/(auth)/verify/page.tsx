@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function VerifyPage() {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 w-full max-w-sm text-center">
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-8 w-full max-w-sm text-center">
       <div className="w-14 h-14 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-5">
         <PiEnvelopeSimple className="text-2xl text-indigo-600" />
       </div>

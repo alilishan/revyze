@@ -63,7 +63,7 @@ export default async function HomePage() {
       <FeatureCards />
 
       <footer className="bg-indigo-950 text-indigo-200 mt-8">
-        <div className="max-w-5xl mx-auto px-4 py-12 grid grid-cols-1 sm:grid-cols-3 gap-8">
+        <div className="max-w-5xl mx-auto px-4 py-10 sm:py-12 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
 
           {/* Brand */}
           <div className="space-y-3">

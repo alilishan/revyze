@@ -140,7 +140,7 @@ export function AnswerDrawer({ card, onClose }: Props) {
   return (
     <>
       {/* Desktop: sticky right panel */}
-      <div className="hidden md:block w-96 shrink-0">
+      <div className="hidden md:block md:w-80 lg:w-96 shrink-0">
         <div className="sticky top-20 bg-white rounded-2xl border border-slate-200 max-h-[calc(100vh-5.5rem)] overflow-y-auto">
           {card ? (
             <DrawerContent card={card} onClose={onClose} />

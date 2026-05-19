@@ -99,7 +99,7 @@ export function QuestionBank({ flashcards }: { flashcards: QuestionCard[] }) {
               </button>
 
               {filtersOpen && (
-                <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-xl border border-slate-200 shadow-lg p-4 z-10 flex flex-col gap-4">
+                <div className="absolute right-0 top-full mt-2 w-56 sm:w-64 bg-white rounded-xl border border-slate-200 shadow-lg p-4 z-10 flex flex-col gap-4">
                   {/* Topic */}
                   <div>
                     <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide block mb-1.5">

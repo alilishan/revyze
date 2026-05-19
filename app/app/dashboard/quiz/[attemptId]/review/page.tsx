@@ -112,12 +112,12 @@ export default async function ReviewPage({ params, searchParams }: Props) {
       </div>
 
       {/* Score summary */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 flex items-center gap-8">
+      <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
         <div className="text-center shrink-0">
-          <p className={`text-5xl font-black ${scoreColor}`}>{attempt.score}%</p>
+          <p className={`text-4xl sm:text-5xl font-black ${scoreColor}`}>{attempt.score}%</p>
           <p className="text-xs text-slate-400 mt-1">Score</p>
         </div>
-        <div className="flex-1 grid grid-cols-3 gap-4 text-center">
+        <div className="w-full sm:flex-1 grid grid-cols-3 gap-3 sm:gap-4 text-center">
           <div>
             <p className="text-2xl font-bold text-emerald-600">
               {attempt.correctAnswers}

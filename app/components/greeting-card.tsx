@@ -11,7 +11,7 @@ export function GreetingCard({ children }: Props) {
   const prefersReduced = useReducedMotion()
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl shadow-xl p-6 flex items-center justify-between gap-4">
+    <section className="relative overflow-hidden bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl shadow-xl p-4 sm:p-6 flex items-center justify-between gap-2 sm:gap-4">
       {/* Floating decorative bubbles */}
       <motion.div
         className="absolute top-0 right-0 w-36 h-36 bg-white/5 rounded-full pointer-events-none"

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 w-full max-w-sm">
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-8 w-full max-w-sm">
       <h1 className="text-xl font-bold text-slate-900 mb-1">Welcome back</h1>
       <p className="text-slate-500 text-sm mb-6">
         Enter your email and we&apos;ll send you a sign-in link.

@@ -87,7 +87,7 @@ export default async function DashboardPage({
         </AnimatedCards>
 
         {/* ── Main grid ──────────────────────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
 
           {/* Your Quizzes — 2/3 width */}
           <section className="lg:col-span-2 space-y-4">
