@@ -10,6 +10,7 @@ import { UserQuizCard } from "@/components/user-quiz-card"
 import { SubjectCard } from "@/components/subject-card"
 import { getSubjectColors } from "@/lib/subject-colors"
 import { Library, Target, BarChart2, BookOpen } from "lucide-react"
+import { StatCard } from "@/components/stat-card"
 import { PiUserCircle } from "react-icons/pi"
 import Link from "next/link"
 import type { Metadata } from "next"
@@ -69,44 +70,20 @@ export default async function DashboardPage({
         </GreetingCard>
 
         {/* ── Stats strip ────────────────────────────────────────────── */}
-        <AnimatedCards className="grid grid-cols-3 gap-4" staggerMs={50}>
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-indigo-100 text-indigo-600 rounded-xl p-2 shrink-0">
-                <Library className="w-4 h-4" />
-              </div>
-              <div>
-                <AnimatedCounter value={subjects.length} className="text-2xl font-medium text-slate-900" />
-                <p className="text-slate-500 text-xs">Subjects</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-emerald-100 text-emerald-600 rounded-xl p-2 shrink-0">
-                <Target className="w-4 h-4" />
-              </div>
-              <div>
-                <AnimatedCounter value={totalAttempts} className="text-2xl font-medium text-slate-900" />
-                <p className="text-slate-500 text-xs">Quizzes taken</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-amber-100 text-amber-600 rounded-xl p-2 shrink-0">
-                <BarChart2 className="w-4 h-4" />
-              </div>
-              <div>
-                {avgScore !== null ? (
-                  <AnimatedCounter value={avgScore} suffix="%" className="text-2xl font-medium text-slate-900" />
-                ) : (
-                  <span className="text-2xl font-medium text-slate-900">—</span>
-                )}
-                <p className="text-slate-500 text-xs">Avg score</p>
-              </div>
-            </div>
-          </div>
+        <AnimatedCards className="grid grid-cols-3 gap-3 sm:gap-4" staggerMs={50}>
+          <StatCard icon={Library} label="Subjects" iconClass="bg-indigo-100 text-indigo-600">
+            <AnimatedCounter value={subjects.length} className="text-xl sm:text-2xl font-medium text-slate-900" />
+          </StatCard>
+          <StatCard icon={Target} label="Quizzes taken" iconClass="bg-emerald-100 text-emerald-600">
+            <AnimatedCounter value={totalAttempts} className="text-xl sm:text-2xl font-medium text-slate-900" />
+          </StatCard>
+          <StatCard icon={BarChart2} label="Avg score" iconClass="bg-amber-100 text-amber-600">
+            {avgScore !== null ? (
+              <AnimatedCounter value={avgScore} suffix="%" className="text-xl sm:text-2xl font-medium text-slate-900" />
+            ) : (
+              <span className="text-xl sm:text-2xl font-medium text-slate-900">—</span>
+            )}
+          </StatCard>
         </AnimatedCards>
 
         {/* ── Main grid ──────────────────────────────────────────────── */}
