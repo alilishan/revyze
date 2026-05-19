@@ -15,6 +15,7 @@ import {
 } from 'react-icons/pi'
 import { getSubjectColors } from '@/lib/subject-colors'
 import { nameToSlug } from '@/lib/subject-slug'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/animate-ui/components/radix/tooltip'
 import Link from 'next/link'
 import type { IconType } from 'react-icons'
 
@@ -62,20 +63,29 @@ export function SubjectCard({ subject }: Props) {
 
       {hasCards && (
         <div className="flex items-center gap-1 shrink-0">
-          <Link
-            href={`/dashboard/${nameToSlug(subject.name)}/questions`}
-            title="Browse questions"
-            className="p-1.5 rounded-lg text-slate-500 hover:bg-white/70 hover:text-slate-700 transition-colors"
-          >
-            <PiListBullets className="text-base" />
-          </Link>
-          <Link
-            href={`/dashboard/quiz/start?subjectId=${subject.id}`}
-            title="Start quiz"
-            className="p-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
-          >
-            <PiPlay className="text-base" />
-          </Link>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                href={`/dashboard/${nameToSlug(subject.name)}/questions`}
+                className="p-1.5 rounded-lg text-slate-500 hover:bg-white/70 hover:text-slate-700 transition-colors"
+              >
+                <PiListBullets className="text-base" />
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="top">Browse questions</TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                href={`/dashboard/quiz/start?subjectId=${subject.id}`}
+                className="p-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+              >
+                <PiPlay className="text-base" />
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="top">Start quiz</TooltipContent>
+          </Tooltip>
         </div>
       )}
     </motion.div>
