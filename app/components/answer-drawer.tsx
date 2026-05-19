@@ -124,6 +124,11 @@ function DrawerContent({ card, onClose }: Props) {
         {card.frequency > 0 && yearRange && (
           <span className="text-xs text-slate-500">
             Appeared {card.frequency} time{card.frequency !== 1 ? 's' : ''} in past papers ({yearRange})
+            {card.sources.length > 0 && card.sources.length < card.frequency && (
+              <span className="block text-slate-400 mt-0.5">
+                {card.sources.length} source{card.sources.length !== 1 ? 's' : ''} shown — frequency includes all paper variants
+              </span>
+            )}
           </span>
         )}
       </div>
