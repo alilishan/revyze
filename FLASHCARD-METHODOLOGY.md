@@ -128,38 +128,104 @@ Save the final set as `material/<subject-name>/flashcards.json`. Each entry foll
 
 ## Seeding the Database
 
-Once the JSON is ready:
+There is **one seed script for every subject** — `app/prisma/seed.ts`. It holds a registry of all eight
+IGCSE subjects and reads `material/<dir>/flashcards.json` for each. You do not write a seed script per
+subject; you only drop the JSON in the right folder.
 
 ```bash
 cd app
 
-# First time
-npx tsx prisma/seed-<subject>.ts
-
-# Wipe and re-seed
-npx tsx prisma/seed-<subject>.ts --force
+npx prisma db seed                            # subjects + every subject that has a flashcards.json
+npx tsx prisma/seed.ts --subject chemistry    # one subject only
+npx tsx prisma/seed.ts --subject chemistry --force  # wipe that subject and re-seed
 ```
 
-The seed script must:
-1. Find the `Subject` record by its Cambridge code (e.g. `"0610"` for Biology).
-2. Create one `Topic` record per unique topic name and build a `topicMap`.
-3. Insert each `Flashcard` with `frequency`, `subjectId`, `topicId`, and nested `sources`.
+A subject with no `flashcards.json` is skipped with a log line, so running the seed early is safe.
 
-See `app/prisma/seed-biology.ts` as the reference implementation.
+The registry lives at the top of `seed.ts`. Each entry maps a Cambridge code to a material directory:
+
+```ts
+{ name: "Chemistry", code: "0620", dir: "chemistry", description: "Cambridge IGCSE Chemistry" }
+```
 
 ---
 
 ## Adding a New Subject
 
-1. **Create the material folder**: `material/<subject-name>/`
-2. **Copy in the past papers**: QP + MS PDFs for all available years
-3. **Generate the JSON**: follow Steps 1–6 above; save as `material/<subject-name>/flashcards.json`
-4. **Check the subject exists in the DB**: run `npx prisma db seed` if you have not already (it seeds all 8 IGCSE subjects by their Cambridge codes)
-5. **Copy the seed script**: copy `app/prisma/seed-biology.ts` → `app/prisma/seed-<subject>.ts`
-   - Change the `findFirst` query to match the new subject's Cambridge code
-   - Update the script header comment
-6. **Run the seed**: `npx tsx prisma/seed-<subject>.ts`
-7. **Add the seed command to `README.md`** under the Database section
+1. **Create the material folder**: `material/<subject-name>/` — the name must match the `dir` field in the
+   `SUBJECTS` registry in `app/prisma/seed.ts` (all eight subjects are already registered)
+2. **Copy in the past papers**: QP + MS PDFs for all available years, plus the current syllabus PDF
+3. **Generate the JSON**: follow the pipeline below; save as `material/<subject-name>/flashcards.json`
+4. **Run the seed**: `cd app && npx tsx prisma/seed.ts --subject <subject-name>`
+
+No new seed script, no README change — the unified seeder picks the subject up from its registry entry.
+
+---
+
+## The Extraction Pipeline
+
+Reading forty-odd PDFs in a single pass does not scale past one subject. Run it in stages instead, with
+each stage's output on disk so a failure costs one paper rather than the whole set.
+
+**Stage 0 — choose the papers.** Aim for ~22 QP+MS pairs: the core theory and extended theory papers of one
+session per year across ten years. Check the paper numbering for the whole range before you start —
+Cambridge renumbers papers. For Chemistry (0620), Paper 2 was core theory and Paper 3 extended theory
+before 2016; from 2016 it is Paper 3 core and Paper 4 extended. Getting this wrong inverts every difficulty
+label for the affected years. Also check the session actually exists: 0620 has no May/June 2025 papers,
+only March.
+
+**Stage 1 — extract text.** `pdftotext -layout` each PDF into `material/<subject>/extracted/`. Deterministic,
+fast, and it makes the QP+MS pairing explicit before any model reads anything.
+
+**Stage 2 — one pass per paper pair.** Each pass reads one QP + its MS and writes candidate cards to
+`material/<subject>/candidates/<paper>_<session><yy>.json`, with `frequency: 1`, a single-year `yearsAsked`,
+and exact source references. These passes are independent, so they parallelise across agents. Give every
+pass the same fixed list of allowed `topic` values, taken from the syllabus — otherwise the same concept
+lands under three different topic names and the merge cannot see the duplicates.
+
+**Stage 3 — merge and count frequency.** Group candidates by underlying concept, keep one canonical card per
+concept, and compute `frequency` and `yearsAsked` from the merged source list. Shard this by topic group so
+each pass holds a manageable number of cards. This stage is where the frequency numbers become real —
+never estimate them in stage 2.
+
+**Stage 4 — validate.** Check the merged set against the checklist below before writing `flashcards.json`.
+
+### Diagram cards
+
+Questions that only make sense with their figure are skipped by the text pipeline and picked up by a
+separate pass. `material/<subject>/IGCSE <Subject> Past Papers/extract_<subject>_visual_questions.py`
+segments each question paper by question number, finds the figures, and crops them;
+`material/<subject>/prepare_visual_images.py` then drops unusable crops, converts to webp and stages them
+in `app/public/flashcard-images/<subject>/`. Cards reference them through the `imageUrl` field.
+
+Two things the Chemistry run established, both of which cost a rebuild to discover:
+
+**Find figures from non-text ink, not from whitespace.** The original Biology extractor looked for the
+largest vertical gap between sentences and assumed a diagram sat in it. That fails on ruled tables and
+apparatus drawings packed against prose - it cut table headers off and bled into the following
+sub-question. Render the page, mask every text bounding box, and treat the remaining dark pixels as
+graphical content; contiguous rows of it are the figure. Then correct for the two side effects: masking
+also erases atom labels and axis ticks inside the figure, so grow the band back over any *short* text that
+sits horizontally inside it, and judge that per rendered line rather than per text run, because pdftohtml
+splits one sentence into several short fragments. Exclude the page margins first - the "DO NOT WRITE IN
+THIS MARGIN" rules are graphical and produce blank crops.
+
+**Question numbers are not always separate text items.** Some sessions emit "1  Using numbers only, state
+the:" as a single item instead of a bare "1" in the margin. Matching only bare numbers silently drops
+whole questions and silently merges their pages into the previous question. Accept an inline leading
+number too, but only when it continues the expected sequence, or numbered answer lines start splitting
+questions.
+
+No mechanical filter reliably separates a sparse line diagram from an empty answer space - both are mostly
+white, and dotted answer lines register as ink across the whole crop. Let the card-writing pass discard
+crops that show no figure; it has to look at the image anyway.
+
+### Topic naming
+
+Take `topic` values from the syllabus **subtopic** headings with the numbers stripped ("Ions and ionic
+bonds", "Rate of reaction"), not the dozen top-level headings — those are too coarse to filter a quiz by.
+Check the current syllabus against the one in force when the older papers were sat, and drop concepts that
+have since been retired from the specification.
 
 ### Supported subjects and codes
 
@@ -187,4 +253,4 @@ Before committing a new flashcard set, verify:
 - [ ] Difficulty distribution is roughly 30 / 50 / 20 (Easy / Medium / Hard)
 - [ ] No card has an empty `answer`
 - [ ] `explanation` field is `null` (not an empty string) when unused
-- [ ] Seed script runs cleanly from `app/` with `npx tsx prisma/seed-<subject>.ts`
+- [ ] Seed runs cleanly from `app/` with `npx tsx prisma/seed.ts --subject <subject>`

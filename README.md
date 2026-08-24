@@ -58,8 +58,7 @@ Fill in the values:
 ```bash
 cd app
 npx prisma migrate dev    # apply schema
-npx prisma db seed        # seed IGCSE subjects
-npx tsx prisma/seed-biology.ts  # seed Biology flashcards
+npx prisma db seed        # seed subjects + every available flashcard set
 ```
 
 ### 4. Start the dev server
@@ -93,9 +92,10 @@ npm run test:watch        # Vitest in watch mode
 
 ```bash
 npx prisma migrate dev    # apply schema changes to local DB
-npx prisma db seed        # seed IGCSE subjects (Math, Physics, Chemistry, etc.)
-npx tsx prisma/seed-biology.ts  # seed 145 Biology flashcards from past papers (2015–2025)
-npx tsx prisma/seed-biology.ts --force  # wipe and re-seed Biology flashcards
+npx prisma db seed        # seed subjects + every subject that has a flashcards.json
+npx tsx prisma/seed.ts --subject biology    # seed one subject only
+npx tsx prisma/seed.ts --subject biology --force  # wipe and re-seed that subject
+npx tsx prisma/seed.ts --force              # wipe and re-seed every subject
 npx prisma studio         # open Prisma Studio at http://localhost:5555
 npx prisma generate       # regenerate Prisma client after schema changes
 ```
