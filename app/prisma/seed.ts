@@ -6,6 +6,7 @@
  *   npx tsx prisma/seed.ts      # same
  *   npx tsx prisma/seed.ts --force            # wipe + re-seed every subject
  *   npx tsx prisma/seed.ts --subject biology  # seed (or re-seed with --force) one subject
+ *   npx tsx prisma/seed.ts --subject biology --append  # add only new cards, keep existing + quiz data
  *
  * Flashcard data is read from material/<dir>/flashcards.json.
  * Add a new subject by adding an entry below and dropping its flashcards.json.
@@ -64,29 +65,71 @@ function loadCards(dir: string): Card[] | null {
   return JSON.parse(readFileSync(path, "utf-8")) as Card[]
 }
 
-async function seedSubjectCards(subject: SubjectEntry, subjectId: string, force: boolean) {
-  const cards = loadCards(subject.dir)
-  if (!cards) {
+async function seedSubjectCards(
+  subject: SubjectEntry,
+  subjectId: string,
+  force: boolean,
+  append: boolean
+) {
+  const allCards = loadCards(subject.dir)
+  if (!allCards) {
     console.log(`  [${subject.name}] No flashcards.json found — skipping cards.`)
     return
   }
+  let cards = allCards
 
   const existing = await prisma.flashcard.count({ where: { subjectId } })
 
   if (existing > 0) {
-    if (!force) {
-      console.log(`  [${subject.name}] ${existing} cards already seeded — skipping. Use --force to re-seed.`)
+    if (append) {
+      // Add only what is not already in the database, leaving existing cards —
+      // and any quiz that references them — untouched.
+      const known = new Set(
+        (
+          await prisma.flashcard.findMany({ where: { subjectId }, select: { question: true } })
+        ).map((c) => c.question)
+      )
+      cards = allCards.filter((c) => !known.has(c.question))
+      if (cards.length === 0) {
+        console.log(`  [${subject.name}] ${existing} cards already seeded — nothing new to append.`)
+        return
+      }
+      console.log(`  [${subject.name}] Appending ${cards.length} new card(s) to ${existing} existing.`)
+    } else if (!force) {
+      console.log(
+        `  [${subject.name}] ${existing} cards already seeded — skipping. Use --append to add new cards, or --force to wipe and re-seed.`
+      )
       return
+    } else {
+      // --force deletes this subject's cards. That cascades: quizzes built from
+      // them lose their questions and past attempts lose their stored answers.
+      const [quizCards, answers] = await Promise.all([
+        prisma.quizFlashcard.count({ where: { flashcard: { subjectId } } }),
+        prisma.quizAttemptAnswer.count({ where: { flashcard: { subjectId } } }),
+      ])
+      if (quizCards > 0 || answers > 0) {
+        console.log(
+          `  [${subject.name}] WARNING: --force will also destroy ${quizCards} quiz question link(s) ` +
+            `and ${answers} recorded quiz answer(s). Use --append to add new cards without touching them.`
+        )
+      }
+      await prisma.flashcard.deleteMany({ where: { subjectId } })
+      await prisma.topic.deleteMany({ where: { subjectId } })
+      console.log(`  [${subject.name}] Cleared ${existing} existing cards.`)
     }
-    await prisma.flashcard.deleteMany({ where: { subjectId } })
-    await prisma.topic.deleteMany({ where: { subjectId } })
-    console.log(`  [${subject.name}] Cleared ${existing} existing cards.`)
   }
 
-  // Topics
+  // Topics — reuse any that already exist so appending does not duplicate them.
   const topicNames = [...new Set(cards.map((c) => c.topic))].sort()
   const topicMap: Record<string, string> = {}
+  for (const { name, id } of await prisma.topic.findMany({
+    where: { subjectId, name: { in: topicNames } },
+    select: { name: true, id: true },
+  })) {
+    topicMap[name] = id
+  }
   for (const name of topicNames) {
+    if (topicMap[name]) continue
     const topic = await prisma.topic.create({ data: { name, subjectId } })
     topicMap[name] = topic.id
   }
@@ -134,6 +177,7 @@ async function seedSubjectCards(subject: SubjectEntry, subjectId: string, force:
 
 async function main() {
   const force = process.argv.includes("--force")
+  const append = process.argv.includes("--append")
   const subjectArg = process.argv.find((a) => a.startsWith("--subject="))?.split("=")[1]
     ?? (process.argv.indexOf("--subject") !== -1
         ? process.argv[process.argv.indexOf("--subject") + 1]
@@ -164,7 +208,7 @@ async function main() {
   for (const subject of targets) {
     const record = await prisma.subject.findUnique({ where: { code: subject.code } })
     if (!record) continue
-    await seedSubjectCards(subject, record.id, force)
+    await seedSubjectCards(subject, record.id, force, append)
   }
 
   console.log("\nDone.")
